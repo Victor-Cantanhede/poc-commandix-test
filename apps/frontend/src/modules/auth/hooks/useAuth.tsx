@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode } from 'react';
 import { User } from '../types/auth.types';
 import { authService } from '../services/auth.service';
 
@@ -13,18 +13,18 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [accessToken, setAccessToken] = useState<string | null>(null);
-
-  useEffect(() => {
+  const [user, setUser] = useState<User | null>(() => {
     const storedUser = localStorage.getItem('user');
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
+  
+  const [accessToken, setAccessToken] = useState<string | null>(() => {
     const storedToken = localStorage.getItem('accessToken');
-    if (storedUser && storedToken) {
-      setUser(JSON.parse(storedUser));
-      setAccessToken(storedToken);
+    if (storedToken) {
       authService.setAuthToken(storedToken);
     }
-  }, []);
+    return storedToken ? storedToken : null;
+  });
 
   const login = (token: string, refreshToken: string, userData: User) => {
     setUser(userData);
