@@ -4,9 +4,10 @@ import { ContractController } from './controllers/contract.controller';
 import { PrismaContractRepository } from './repositories/prisma-contract.repository';
 import { PrismaModule } from '../../core/prisma/prisma.module';
 import { TemplateModule } from '../template/template.module';
+import { HistoryModule } from '../history/history.module';
 
 @Module({
-  imports: [PrismaModule, TemplateModule],
+  imports: [PrismaModule, TemplateModule, HistoryModule],
   controllers: [ContractController],
   providers: [
     ContractService,

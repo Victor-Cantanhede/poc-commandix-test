@@ -30,3 +30,17 @@ export interface PaginatedResult<T> {
   limit: number;
   totalPages: number;
 }
+
+export interface ContractHistory {
+  id: string;
+  contractId: string;
+  action: 'CREATED' | 'UPDATED_FIELD' | 'STATUS_CHANGED';
+  field?: string;
+  oldValue?: any;
+  newValue?: any;
+  createdAt: string;
+  user: {
+    name: string;
+    email: string;
+  };
+}

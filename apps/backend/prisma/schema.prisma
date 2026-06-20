@@ -21,7 +21,7 @@ model Tenant {
   users     User[]
   template  Template?
   contracts Contract[]
-  // Outras relações futuras: HistoryLogs
+  histories ContractHistory[]
 }
 
 model User {
@@ -36,6 +36,7 @@ model User {
   deletedAt    DateTime?
 
   tenant Tenant @relation(fields: [tenantId], references: [id])
+  histories ContractHistory[]
 
   @@index([tenantId])
 }
@@ -67,6 +68,26 @@ model Contract {
   deletedAt        DateTime?
 
   tenant Tenant @relation(fields: [tenantId], references: [id])
+  histories ContractHistory[]
 
   @@index([tenantId])
+}
+
+model ContractHistory {
+  id         String   @id @default(uuid())
+  tenantId   String
+  contractId String
+  userId     String
+  action     String
+  field      String?
+  oldValue   Json?
+  newValue   Json?
+  createdAt  DateTime @default(now())
+
+  tenant   Tenant   @relation(fields: [tenantId], references: [id])
+  contract Contract @relation(fields: [contractId], references: [id])
+  user     User     @relation(fields: [userId], references: [id])
+
+  @@index([tenantId])
+  @@index([contractId])
 }

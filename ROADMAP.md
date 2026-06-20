@@ -132,7 +132,7 @@ Critério de conclusão:
 
 # Fase 06 — History
 
-Status: ⬜ Não iniciado
+Status: ✅ Concluído
 
 Escopo:
 

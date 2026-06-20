@@ -6,8 +6,9 @@ import { AuthModule } from './modules/auth/auth.module';
 import { TenantModule } from './modules/tenant/tenant.module';
 import { TemplateModule } from './modules/template/template.module';
 import { ContractModule } from './modules/contract/contract.module';
+import { HistoryModule } from './modules/history/history.module';
 
 @Module({
-  imports: [ConfigModule, PrismaModule, HealthModule, TenantModule, AuthModule, TemplateModule, ContractModule],
+  imports: [ConfigModule, PrismaModule, HealthModule, TenantModule, AuthModule, TemplateModule, ContractModule, HistoryModule],
 })
 export class AppModule {}

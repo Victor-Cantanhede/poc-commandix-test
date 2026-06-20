@@ -1,5 +1,5 @@
 import { api } from '@/shared/services/api';
-import { Contract, ContractQuery, ContractStatus, PaginatedResult } from '../types/contract.types';
+import { Contract, ContractQuery, ContractStatus, PaginatedResult, ContractHistory } from '../types/contract.types';
 
 export const contractService = {
   findAll: async (query?: ContractQuery): Promise<PaginatedResult<Contract>> => {
@@ -27,6 +27,11 @@ export const contractService = {
 
   changeStatus: async (id: string, status: ContractStatus): Promise<Contract> => {
     const response = await api.patch(`/api/contracts/${id}/status`, { status });
+    return response.data;
+  },
+
+  getHistory: async (id: string): Promise<ContractHistory[]> => {
+    const response = await api.get(`/api/contracts/${id}/history`);
     return response.data;
   },
 };

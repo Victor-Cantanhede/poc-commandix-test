@@ -4,6 +4,7 @@ import { Button } from '@/shared/components/Button';
 import { contractService } from '../services/contract.service';
 import { Contract, ContractStatus } from '../types/contract.types';
 import { ContractForm } from '../components/ContractForm';
+import { ContractHistory } from '../components/ContractHistory';
 import { templateService } from '@/modules/template/services/template.service';
 import { Card, CardContent } from '@/shared/components/ui/card';
 import { toast } from 'sonner';
@@ -128,6 +129,13 @@ export function ContractDetail() {
           )}
         </CardContent>
       </Card>
+
+      {!isNew && contract && (
+        <div className="mt-8">
+          <h2 className="text-xl font-semibold tracking-tight mb-4">Histórico de Alterações</h2>
+          <ContractHistory contractId={contract.id} />
+        </div>
+      )}
     </div>
   );
 }

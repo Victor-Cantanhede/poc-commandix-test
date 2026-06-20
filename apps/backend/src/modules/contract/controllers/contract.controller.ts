@@ -14,7 +14,7 @@ export class ContractController {
   @Roles(Role.ADMIN, Role.VIEWER)
   @Post()
   create(@CurrentUser() user: any, @Body() createContractDto: CreateContractDto) {
-    return this.contractService.create(user.tenantId, createContractDto);
+    return this.contractService.create(user.tenantId, user.userId, createContractDto);
   }
 
   @Roles(Role.ADMIN, Role.VIEWER)
@@ -32,12 +32,12 @@ export class ContractController {
   @Roles(Role.ADMIN, Role.VIEWER)
   @Patch(':id')
   update(@CurrentUser() user: any, @Param('id') id: string, @Body() updateContractDto: UpdateContractDto) {
-    return this.contractService.update(user.tenantId, id, updateContractDto);
+    return this.contractService.update(user.tenantId, user.userId, id, updateContractDto);
   }
 
   @Roles(Role.ADMIN)
   @Patch(':id/status')
   changeStatus(@CurrentUser() user: any, @Param('id') id: string, @Body('status') status: any) {
-    return this.contractService.changeStatus(user.tenantId, id, status);
+    return this.contractService.changeStatus(user.tenantId, user.userId, id, status);
   }
 }

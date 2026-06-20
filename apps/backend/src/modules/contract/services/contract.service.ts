@@ -7,12 +7,15 @@ import { ContractQueryDto } from '../dtos/contract-query.dto';
 import { ContractEntity, ContractStatus } from '../entities/contract.entity';
 import { TemplateField } from '../../template/entities/template.entity';
 
+import { HistoryService } from '../../history/services/history.service';
+
 @Injectable()
 export class ContractService {
   constructor(
     @Inject('IContractRepository')
     private readonly contractRepository: IContractRepository,
     private readonly templateService: TemplateService,
+    private readonly historyService: HistoryService,
   ) {}
 
   private validatePayload(schema: TemplateField[], payload: Record<string, any>) {
@@ -40,7 +43,7 @@ export class ContractService {
     }
   }
 
-  async create(tenantId: string, data: CreateContractDto): Promise<ContractEntity> {
+  async create(tenantId: string, userId: string, data: CreateContractDto): Promise<ContractEntity> {
     const template = await this.templateService.getTemplate(tenantId);
     if (!template) {
       throw new BadRequestException('No active template found for this tenant');
@@ -48,12 +51,20 @@ export class ContractService {
 
     this.validatePayload(template.schema, data.payload);
 
-    return this.contractRepository.create({
+    const contract = await this.contractRepository.create({
       tenantId,
       status: ContractStatus.DRAFT,
       templateSnapshot: template.schema,
       payload: data.payload,
     });
+
+    await this.historyService.log(tenantId, {
+      contractId: contract.id,
+      userId,
+      action: 'CREATED',
+    });
+
+    return contract;
   }
 
   async findById(tenantId: string, id: string): Promise<ContractEntity> {
@@ -64,21 +75,51 @@ export class ContractService {
     return contract;
   }
 
-  async update(tenantId: string, id: string, data: UpdateContractDto): Promise<ContractEntity> {
+  async update(tenantId: string, userId: string, id: string, data: UpdateContractDto): Promise<ContractEntity> {
     const contract = await this.findById(tenantId, id);
+    const oldPayload = contract.payload as Record<string, any>;
 
     if (data.payload) {
-      const mergedPayload = { ...contract.payload, ...data.payload };
+      const mergedPayload = { ...oldPayload, ...data.payload };
       this.validatePayload(contract.templateSnapshot as TemplateField[], mergedPayload);
       data.payload = mergedPayload;
     }
 
-    return this.contractRepository.update(id, tenantId, data);
+    const updated = await this.contractRepository.update(id, tenantId, data);
+
+    if (data.payload) {
+      const newPayload = data.payload as Record<string, any>;
+      // Identify changed fields
+      for (const key of Object.keys(newPayload)) {
+        if (oldPayload[key] !== newPayload[key]) {
+          await this.historyService.log(tenantId, {
+            contractId: id,
+            userId,
+            action: 'UPDATED_FIELD',
+            field: key,
+            oldValue: oldPayload[key],
+            newValue: newPayload[key],
+          });
+        }
+      }
+    }
+
+    return updated;
   }
 
-  async changeStatus(tenantId: string, id: string, status: ContractStatus): Promise<ContractEntity> {
+  async changeStatus(tenantId: string, userId: string, id: string, status: ContractStatus): Promise<ContractEntity> {
     const contract = await this.findById(tenantId, id);
-    return this.contractRepository.update(id, tenantId, { status });
+    const updated = await this.contractRepository.update(id, tenantId, { status });
+
+    await this.historyService.log(tenantId, {
+      contractId: id,
+      userId,
+      action: 'STATUS_CHANGED',
+      oldValue: contract.status,
+      newValue: status,
+    });
+
+    return updated;
   }
 
   async findAll(tenantId: string, query: ContractQueryDto) {
