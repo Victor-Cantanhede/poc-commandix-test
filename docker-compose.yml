@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: commandix_postgres
+    environment:
+      POSTGRES_USER: commandix
+      POSTGRES_PASSWORD: commandix_pass
+      POSTGRES_DB: commandix_db
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U commandix -d commandix_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./apps/backend
+      dockerfile: Dockerfile
+    container_name: commandix_backend
+    ports:
+      - '3000:3000'
+    environment:
+      - DATABASE_URL=postgresql://commandix:commandix_pass@postgres:5432/commandix_db?schema=public
+      - JWT_SECRET=super_secret_jwt_key_for_poc
+      - JWT_REFRESH_SECRET=super_secret_refresh_key_for_poc
+      - PORT=3000
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./apps/frontend
+      dockerfile: Dockerfile
+    container_name: commandix_frontend
+    ports:
+      - '5173:5173'
+    environment:
+      - VITE_API_URL=http://localhost:3000
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
