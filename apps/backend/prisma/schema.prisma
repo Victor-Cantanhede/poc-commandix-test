@@ -13,9 +13,10 @@ enum Role {
 }
 
 model Tenant {
-  id        String   @id @default(uuid())
+  id        String    @id @default(uuid())
   name      String
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?
 
   users     User[]
   // Outras relações futuras: Template, Contracts, HistoryLogs

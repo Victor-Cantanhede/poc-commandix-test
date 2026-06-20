@@ -34,6 +34,7 @@ Toda solução deve ser a mais simples possível que atenda corretamente aos req
 * Vite
 * TypeScript
 * TailwindCSS
+* shadcn/ui (Tema Escuro Padrão)
 
 ## Infraestrutura
 
@@ -381,13 +382,14 @@ src/
 
 ## Shared
 
-Somente componentes genéricos:
+Somente componentes genéricos baseados em shadcn/ui:
 
 * Button
 * Input
-* Modal
-* Dialog
+* Modal / Dialog
 * Spinner
+* Card
+* Table
 
 Nenhuma regra de negócio.
 
@@ -411,7 +413,9 @@ types/
 
 Obrigatório:
 
-TailwindCSS
+* TailwindCSS
+* shadcn/ui (para todos os componentes base e layout)
+* Tema escuro como padrão (variáveis CSS)
 
 Proibido:
 

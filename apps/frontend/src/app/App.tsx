@@ -14,6 +14,14 @@ function ProtectedRoute() {
   );
 }
 
+function AdminRoute() {
+  const { user } = useAuth();
+  if (user?.role !== 'ADMIN') {
+    return <Navigate to="/" replace />;
+  }
+  return <Outlet />;
+}
+
 export function App() {
   return (
     <AuthProvider>
@@ -22,4 +30,5 @@ export function App() {
   );
 }
 
-export { ProtectedRoute };
+export { ProtectedRoute, AdminRoute };
+

@@ -36,18 +36,24 @@ Em caso de dúvida ou conflito com instruções isoladas, **ESTE DOCUMENTO PREVA
    - *Application/Use-Cases:* Orquestração dos fluxos.
    - *Services:* Regras de negócio puras. Máximo 300 linhas.
    - *Repositories:* Única camada permitida para usar o Prisma ORM (Acesso a dados).
-   - *DTOs:* Contratos rígidos de I/O.
+   - *DTOs:* Contratos rígidos de I/O. **OBRIGATÓRIO:** Todo DTO de entrada deve utilizar decorators do `class-validator` e a aplicação deve possuir `ValidationPipe` global.
 
-## FRONTEND (React + Vite + TailwindCSS)
+## BANCO DE DADOS E PRISMA
+1. **Migrations:** O versionamento do banco de dados deve ser feito estritamente utilizando `prisma migrate dev` (desenvolvimento) e `prisma migrate deploy` (produção).
+2. **PROIBIDO:** Utilizar `prisma db push` (exceto em fases de prototipação isolada que não requeiram versão, porém na POC oficial é **proibido**).
+
+
+## FRONTEND (React + Vite + TailwindCSS + shadcn/ui)
 1. **Estrutura de Pastas:** `src/app/`, `src/modules/`, `src/shared/`.
 2. **Estrutura de Módulo Frontend:** `components/`, `pages/`, `services/`, `hooks/`, `types/`.
 3. **Estilização:**
-   - **OBRIGATÓRIO:** TailwindCSS com utility classes.
+   - **OBRIGATÓRIO:** Utilizar os componentes base do `shadcn/ui` para a criação de elementos genéricos (exceções apenas em casos raríssimos que exijam UI completamente customizada).
+   - **OBRIGATÓRIO:** TailwindCSS com utility classes e tema escuro como padrão configurado via variáveis CSS.
    - **PROIBIDO:** CSS inline (`style={{}}`) ou arquivos CSS específicos por componente.
 4. **Comunicação e Compartilhamento:**
-   - Módulo `shared` serve APENAS genéricos (UI components como Button, Input, Modal). Proibido ter regra de negócio.
+   - Módulo `shared` serve APENAS genéricos (UI components como Button, Input, Modal implementados com shadcn/ui em `shared/components/`). Proibido ter regra de negócio.
    - Toda chamada HTTP **DEVE** ficar na pasta `services/` do módulo. Proibido chamadas espalhadas.
-   - Imports absolutos configurados via alias.
+   - Imports absolutos configurados via alias (`@/*`).
 
 ## QUALIDADE & NOMENCLATURA
 1. Nomenclatura:
@@ -62,3 +68,5 @@ Em caso de dúvida ou conflito com instruções isoladas, **ESTE DOCUMENTO PREVA
    - Existe Prisma fora do repository?
    - Existe código duplicado?
    - Existe módulo fora da arquitetura?
+   - Algum DTO de entrada está sem `class-validator`?
+   - Foi utilizado `db push` no lugar de gerar uma nova migration?

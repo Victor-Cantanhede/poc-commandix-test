@@ -26,7 +26,7 @@ export class AuthService {
 
     const payload = { sub: user.id, tid: user.tenantId, role: user.role };
     const accessToken = await this.jwtService.signAsync(payload);
-    
+
     const refreshToken = crypto.randomBytes(40).toString('hex');
     await this.authRepository.updateRefreshToken(user.id, refreshToken);
 
@@ -37,7 +37,7 @@ export class AuthService {
         id: user.id,
         name: user.name,
         role: user.role,
-      }
+      },
     };
   }
 

@@ -299,6 +299,7 @@ Stack:
 * Vite
 * TypeScript
 * TailwindCSS
+* shadcn/ui (Tema Escuro Padrão)
 
 ---
 
@@ -326,7 +327,13 @@ Utilizar TailwindCSS.
 
 # OBRIGATÓRIO
 
-Utilizar utility classes.
+Utilizar utility classes e tema escuro.
+
+---
+
+# OBRIGATÓRIO
+
+Utilizar shadcn/ui para todos os componentes genéricos.
 
 ---
 
@@ -350,13 +357,15 @@ shared/
 
 # SHARED
 
-Somente:
+Somente componentes baseados no shadcn/ui:
 
 * Button
 * Input
 * Modal
 * Spinner
 * Dialog
+* Card
+* Table
 * componentes genéricos
 
 ---
