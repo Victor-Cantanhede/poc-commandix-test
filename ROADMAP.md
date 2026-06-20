@@ -96,7 +96,7 @@ Critério de conclusão:
 
 # Fase 04 — Template
 
-Status: 🔄 Em andamento
+Status: ✅ Concluído
 
 Escopo:
 
@@ -164,4 +164,4 @@ Antes de concluir qualquer módulo verificar:
 
 # Próxima Tarefa
 
-Implementar módulo Template.
+Implementar módulo Contract.

@@ -54,6 +54,10 @@ Em caso de dúvida ou conflito com instruções isoladas, **ESTE DOCUMENTO PREVA
    - Módulo `shared` serve APENAS genéricos (UI components como Button, Input, Modal implementados com shadcn/ui em `shared/components/`). Proibido ter regra de negócio.
    - Toda chamada HTTP **DEVE** ficar na pasta `services/` do módulo. Proibido chamadas espalhadas.
    - Imports absolutos configurados via alias (`@/*`).
+5. **Feedbacks Visuais (Toasts):**
+   - **OBRIGATÓRIO:** Toda ação originada pelo usuário (ex: submissão de formulários, alterações de estado no backend via POST/PUT/DELETE) deve exibir um feedback visual de sucesso ou erro.
+   - O feedback deve ser exibido através de "Toasts" (utilizando a biblioteca `sonner`) posicionado no canto superior direito (`top-right`).
+   - **PROIBIDO:** Utilizar `alert()` nativo do navegador para qualquer tipo de feedback.
 
 ## QUALIDADE & NOMENCLATURA
 1. Nomenclatura:

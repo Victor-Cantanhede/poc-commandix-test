@@ -19,7 +19,8 @@ model Tenant {
   deletedAt DateTime?
 
   users     User[]
-  // Outras relações futuras: Template, Contracts, HistoryLogs
+  template  Template?
+  // Outras relações futuras: Contracts, HistoryLogs
 }
 
 model User {
@@ -36,4 +37,14 @@ model User {
   tenant       Tenant    @relation(fields: [tenantId], references: [id])
 
   @@index([tenantId])
+}
+
+model Template {
+  id        String   @id @default(uuid())
+  tenantId  String   @unique
+  schema    Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
 }

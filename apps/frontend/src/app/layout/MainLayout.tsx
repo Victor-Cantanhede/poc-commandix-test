@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { useAuth } from '../../modules/auth/hooks/useAuth';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Users, LogOut, Command } from 'lucide-react';
+import { LayoutDashboard, Users, LogOut, Command, FileCode2 } from 'lucide-react';
 import { cn } from '@/shared/lib/utils';
 
 interface MainLayoutProps {
@@ -43,18 +43,32 @@ export function MainLayout({ children }: MainLayoutProps) {
           </Link>
           
           {isAdmin && (
-            <Link 
-              to="/tenants" 
-              className={cn(
-                "flex items-center gap-3 px-4 py-3 rounded-md transition-all font-medium text-sm group",
-                location.pathname === '/tenants' 
-                  ? "bg-primary text-primary-foreground shadow-md" 
-                  : "text-muted-foreground hover:bg-secondary hover:text-foreground"
-              )}
-            >
-              <Users size={18} className={cn(location.pathname === '/tenants' ? "text-primary-foreground" : "text-muted-foreground group-hover:text-foreground transition-colors")} />
-              Tenants
-            </Link>
+            <>
+              <Link 
+                to="/tenants" 
+                className={cn(
+                  "flex items-center gap-3 px-4 py-3 rounded-md transition-all font-medium text-sm group",
+                  location.pathname === '/tenants' 
+                    ? "bg-primary text-primary-foreground shadow-md" 
+                    : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                )}
+              >
+                <Users size={18} className={cn(location.pathname === '/tenants' ? "text-primary-foreground" : "text-muted-foreground group-hover:text-foreground transition-colors")} />
+                Tenants
+              </Link>
+              <Link 
+                to="/template" 
+                className={cn(
+                  "flex items-center gap-3 px-4 py-3 rounded-md transition-all font-medium text-sm group",
+                  location.pathname === '/template' 
+                    ? "bg-primary text-primary-foreground shadow-md" 
+                    : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                )}
+              >
+                <FileCode2 size={18} className={cn(location.pathname === '/template' ? "text-primary-foreground" : "text-muted-foreground group-hover:text-foreground transition-colors")} />
+                Template
+              </Link>
+            </>
           )}
         </nav>
         
