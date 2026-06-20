@@ -3,8 +3,8 @@ export class HistoryResponseDto {
   contractId!: string;
   action!: string;
   field!: string | null;
-  oldValue!: any | null;
-  newValue!: any | null;
+  oldValue!: unknown | null;
+  newValue!: unknown | null;
   createdAt!: Date;
   user!: {
     name: string;

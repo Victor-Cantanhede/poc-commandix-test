@@ -1,7 +1,13 @@
 import { useEffect, useState } from 'react';
 import { contractService } from '../services/contract.service';
 import { ContractHistory as IContractHistory } from '../types/contract.types';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/shared/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from '@/shared/components/ui/card';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 

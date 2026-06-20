@@ -17,8 +17,8 @@ export class HistoryRepository implements IHistoryRepository {
         userId: data.userId,
         action: data.action,
         field: data.field,
-        oldValue: data.oldValue ?? null,
-        newValue: data.newValue ?? null,
+        oldValue: (data.oldValue ?? null) as any,
+        newValue: (data.newValue ?? null) as any,
       },
     }) as unknown as HistoryEntity;
   }

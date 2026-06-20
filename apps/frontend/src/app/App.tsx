@@ -33,4 +33,3 @@ export function App() {
 }
 
 export { ProtectedRoute, AdminRoute };
-

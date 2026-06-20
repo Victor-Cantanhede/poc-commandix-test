@@ -5,8 +5,21 @@ import { Input } from '@/shared/components/Input';
 import { contractService } from '../services/contract.service';
 import { Contract, ContractQuery, ContractStatus, PaginatedResult } from '../types/contract.types';
 import { toast } from 'sonner';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/components/ui/table';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/shared/components/ui/table';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/shared/components/ui/select';
 import { Badge } from '@/shared/components/ui/badge';
 import { Calendar as CalendarIcon, X } from 'lucide-react';
 import { format } from 'date-fns';
@@ -20,7 +33,14 @@ export function ContractList() {
   const navigate = useNavigate();
   const [data, setData] = useState<PaginatedResult<Contract> | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [query, setQuery] = useState<ContractQuery>({ page: 1, limit: 10, search: '', status: '', startDate: '', endDate: '' });
+  const [query, setQuery] = useState<ContractQuery>({
+    page: 1,
+    limit: 10,
+    search: '',
+    status: '',
+    startDate: '',
+    endDate: '',
+  });
 
   const fetchContracts = async () => {
     setIsLoading(true);
@@ -53,10 +73,10 @@ export function ContractList() {
 
   const handleDateRangeChange = (range: DateRange | undefined) => {
     setDateRange(range);
-    
+
     const fromStr = range?.from ? format(range.from, 'yyyy-MM-dd') : '';
     const toStr = range?.to ? format(range.to, 'yyyy-MM-dd') : '';
-    
+
     setQuery((prev) => ({ ...prev, startDate: fromStr, endDate: toStr, page: 1 }));
   };
 
@@ -91,19 +111,19 @@ export function ContractList() {
               <Button
                 variant="outline"
                 className={cn(
-                  "w-[260px] justify-start text-left font-normal",
-                  !dateRange?.from && "text-muted-foreground"
+                  'w-[260px] justify-start text-left font-normal',
+                  !dateRange?.from && 'text-muted-foreground',
                 )}
               >
                 <CalendarIcon className="mr-2 h-4 w-4" />
                 {dateRange?.from ? (
                   dateRange.to ? (
                     <>
-                      {format(dateRange.from, "dd LLL, y", { locale: ptBR })} -{" "}
-                      {format(dateRange.to, "dd LLL, y", { locale: ptBR })}
+                      {format(dateRange.from, 'dd LLL, y', { locale: ptBR })} -{' '}
+                      {format(dateRange.to, 'dd LLL, y', { locale: ptBR })}
                     </>
                   ) : (
-                    format(dateRange.from, "dd LLL, y", { locale: ptBR })
+                    format(dateRange.from, 'dd LLL, y', { locale: ptBR })
                   )
                 ) : (
                   <span>Período de Criação</span>
@@ -122,7 +142,10 @@ export function ContractList() {
             </PopoverContent>
           </Popover>
         </div>
-        <Select value={query.status || 'ALL'} onValueChange={(val) => handleStatusChange(val === 'ALL' ? '' : val)}>
+        <Select
+          value={query.status || 'ALL'}
+          onValueChange={(val) => handleStatusChange(val === 'ALL' ? '' : val)}
+        >
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Todos os Status" />
           </SelectTrigger>
@@ -166,13 +189,29 @@ export function ContractList() {
                 <TableRow key={contract.id}>
                   <TableCell className="font-medium">{contract.id.slice(0, 8)}...</TableCell>
                   <TableCell>
-                    <Badge variant={contract.status === 'ACTIVE' ? 'default' : contract.status === 'DRAFT' ? 'secondary' : 'outline'}>
-                      {contract.status === 'DRAFT' ? 'Rascunho' : contract.status === 'ACTIVE' ? 'Ativo' : 'Encerrado'}
+                    <Badge
+                      variant={
+                        contract.status === 'ACTIVE'
+                          ? 'default'
+                          : contract.status === 'DRAFT'
+                            ? 'secondary'
+                            : 'outline'
+                      }
+                    >
+                      {contract.status === 'DRAFT'
+                        ? 'Rascunho'
+                        : contract.status === 'ACTIVE'
+                          ? 'Ativo'
+                          : 'Encerrado'}
                     </Badge>
                   </TableCell>
                   <TableCell>{new Date(contract.createdAt).toLocaleDateString()}</TableCell>
                   <TableCell className="text-right">
-                    <Button variant="outline" size="sm" onClick={() => navigate(`/contracts/${contract.id}`)}>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigate(`/contracts/${contract.id}`)}
+                    >
                       Visualizar
                     </Button>
                   </TableCell>

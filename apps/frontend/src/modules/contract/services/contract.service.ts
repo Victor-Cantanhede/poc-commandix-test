@@ -1,11 +1,15 @@
 import { api } from '@/shared/services/api';
-import { Contract, ContractQuery, ContractStatus, PaginatedResult, ContractHistory } from '../types/contract.types';
+import {
+  Contract,
+  ContractQuery,
+  ContractStatus,
+  PaginatedResult,
+  ContractHistory,
+} from '../types/contract.types';
 
 export const contractService = {
   findAll: async (query?: ContractQuery): Promise<PaginatedResult<Contract>> => {
-    const cleanQuery = Object.fromEntries(
-      Object.entries(query || {}).filter(([_, v]) => v !== '')
-    );
+    const cleanQuery = Object.fromEntries(Object.entries(query || {}).filter(([_, v]) => v !== ''));
     const response = await api.get('/api/contracts', { params: cleanQuery });
     return response.data;
   },

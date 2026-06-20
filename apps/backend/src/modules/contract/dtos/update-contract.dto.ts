@@ -4,7 +4,7 @@ import { ContractStatus } from '../entities/contract.entity';
 export class UpdateContractDto {
   @IsOptional()
   @IsObject()
-  payload?: Record<string, any>;
+  payload?: Record<string, unknown>;
 
   @IsOptional()
   @IsEnum(ContractStatus)

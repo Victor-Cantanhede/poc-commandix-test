@@ -12,7 +12,13 @@ interface ContractFormProps {
   readOnly?: boolean;
 }
 
-export function ContractForm({ schema, initialData = {}, onSubmit, isLoading, readOnly }: ContractFormProps) {
+export function ContractForm({
+  schema,
+  initialData = {},
+  onSubmit,
+  isLoading,
+  readOnly,
+}: ContractFormProps) {
   const [formData, setFormData] = useState<Record<string, any>>(initialData);
 
   const handleChange = (name: string, value: any) => {
@@ -47,7 +53,9 @@ export function ContractForm({ schema, initialData = {}, onSubmit, isLoading, re
               <Input
                 type="number"
                 value={formData[field.name] || ''}
-                onChange={(e) => handleChange(field.name, e.target.value ? Number(e.target.value) : '')}
+                onChange={(e) =>
+                  handleChange(field.name, e.target.value ? Number(e.target.value) : '')
+                }
                 required={field.required}
                 disabled={readOnly}
               />

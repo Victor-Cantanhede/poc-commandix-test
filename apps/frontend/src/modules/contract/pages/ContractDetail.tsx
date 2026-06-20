@@ -92,14 +92,21 @@ export function ContractDetail() {
             <p className="text-muted-foreground mt-1">
               Status:{' '}
               <span className="font-semibold text-foreground">
-                {contract.status === 'DRAFT' ? 'Rascunho' : contract.status === 'ACTIVE' ? 'Ativo' : 'Encerrado'}
+                {contract.status === 'DRAFT'
+                  ? 'Rascunho'
+                  : contract.status === 'ACTIVE'
+                    ? 'Ativo'
+                    : 'Encerrado'}
               </span>
             </p>
           )}
         </div>
         <div className="flex space-x-2">
           {!isNew && contract?.status === 'DRAFT' && (
-            <Button onClick={() => handleChangeStatus(ContractStatus.ACTIVE)} className="bg-green-600 hover:bg-green-700">
+            <Button
+              onClick={() => handleChangeStatus(ContractStatus.ACTIVE)}
+              className="bg-green-600 hover:bg-green-700"
+            >
               Ativar Contrato
             </Button>
           )}

@@ -7,6 +7,14 @@ import { toast } from 'sonner';
 import { templateService } from '../services/template.service';
 import { Button } from '../../../shared/components/Button';
 import { Input } from '../../../shared/components/Input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../../../shared/components/ui/select';
+import { Checkbox } from '../../../shared/components/ui/checkbox';
 import { TemplateFieldType } from '../types/template.types';
 
 const templateFieldSchema = z.object({
@@ -65,7 +73,7 @@ export function TemplateConfig() {
     try {
       setIsSaving(true);
       setError(null);
-      
+
       // Validação customizada: nomes duplicados
       const names = values.schema.map((f) => f.name.toLowerCase().trim());
       const uniqueNames = new Set(names);
@@ -96,9 +104,16 @@ export function TemplateConfig() {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Template de Contrato</h1>
-          <p className="text-muted-foreground">Configure os campos dinâmicos que irão compor seus contratos.</p>
+          <p className="text-muted-foreground">
+            Configure os campos dinâmicos que irão compor seus contratos.
+          </p>
         </div>
-        <Button type="button" onClick={() => append({ name: '', type: 'text', required: false })} variant="outline" className="gap-2">
+        <Button
+          type="button"
+          onClick={() => append({ name: '', type: 'text', required: false })}
+          variant="outline"
+          className="gap-2"
+        >
           <Plus className="h-4 w-4" />
           Novo Campo
         </Button>
@@ -113,7 +128,10 @@ export function TemplateConfig() {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div className="space-y-4">
           {fields.map((field, index) => (
-            <div key={field.id} className="flex gap-4 items-start p-4 border rounded-lg bg-card text-card-foreground shadow-sm">
+            <div
+              key={field.id}
+              className="flex gap-4 items-start p-4 border rounded-lg bg-card text-card-foreground shadow-sm"
+            >
               <div className="flex-1 space-y-2">
                 <label className="text-sm font-medium">Nome do Campo</label>
                 <Input
@@ -127,25 +145,42 @@ export function TemplateConfig() {
 
               <div className="w-48 space-y-2">
                 <label className="text-sm font-medium">Tipo</label>
-                <select
-                  {...register(`schema.${index}.type` as const)}
-                  className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                <Select
+                  value={field.type}
+                  onValueChange={(value: any) => {
+                    const currentSchema = control._formValues.schema;
+                    currentSchema[index].type = value;
+                    reset({ schema: currentSchema });
+                  }}
                 >
-                  <option value="text">Texto</option>
-                  <option value="number">Número</option>
-                  <option value="date">Data</option>
-                  <option value="boolean">Verdadeiro/Falso</option>
-                </select>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Selecione o tipo" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="text">Texto</SelectItem>
+                    <SelectItem value="number">Número</SelectItem>
+                    <SelectItem value="date">Data</SelectItem>
+                    <SelectItem value="boolean">Verdadeiro/Falso</SelectItem>
+                  </SelectContent>
+                </Select>
+                {/* Hidden input to keep react-hook-form registered */}
+                <input type="hidden" {...register(`schema.${index}.type` as const)} />
               </div>
 
               <div className="w-32 space-y-2 flex flex-col items-center justify-center">
                 <label className="text-sm font-medium">Obrigatório</label>
                 <div className="h-10 flex items-center">
-                  <input
-                    type="checkbox"
-                    {...register(`schema.${index}.required` as const)}
-                    className="h-5 w-5 rounded border-gray-300 text-primary focus:ring-primary"
+                  <Checkbox
+                    id={`schema-${index}-required`}
+                    checked={field.required}
+                    onCheckedChange={(checked) => {
+                      const currentSchema = control._formValues.schema;
+                      currentSchema[index].required = checked === true;
+                      reset({ schema: currentSchema });
+                    }}
                   />
+                  {/* Hidden input to keep react-hook-form registered */}
+                  <input type="hidden" {...register(`schema.${index}.required` as const)} />
                 </div>
               </div>
 

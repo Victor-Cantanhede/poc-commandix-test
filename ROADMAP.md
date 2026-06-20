@@ -18,10 +18,10 @@ Status: ✅ Concluído
 
 Itens:
 
-* pnpm workspaces
-* apps/backend
-* apps/frontend
-* packages/shared-types
+- pnpm workspaces
+- apps/backend
+- apps/frontend
+- packages/shared-types
 
 ---
 
@@ -31,10 +31,10 @@ Status: ✅ Concluído
 
 Itens:
 
-* Docker
-* Docker Compose Dev
-* PostgreSQL
-* Variáveis de ambiente
+- Docker
+- Docker Compose Dev
+- PostgreSQL
+- Variáveis de ambiente
 
 ---
 
@@ -44,9 +44,9 @@ Status: ✅ Concluído
 
 Itens:
 
-* ESLint
-* Prettier
-* TypeScript Strict
+- ESLint
+- Prettier
+- TypeScript Strict
 
 ---
 
@@ -56,8 +56,8 @@ Status: ✅ Concluído
 
 Itens:
 
-* Setup Prisma
-* PostgreSQL Integration
+- Setup Prisma
+- PostgreSQL Integration
 
 ---
 
@@ -67,11 +67,11 @@ Status: ✅ Concluído
 
 Escopo:
 
-* Login
-* JWT
-* Refresh Token
-* Guards
-* RBAC
+- Login
+- JWT
+- Refresh Token
+- Guards
+- RBAC
 
 ---
 
@@ -81,16 +81,16 @@ Status: ✅ Concluído
 
 Escopo:
 
-* Tenant Entity
-* Tenant Repository
-* Tenant Services
-* Tenant Use Cases
-* Tenant Controller
+- Tenant Entity
+- Tenant Repository
+- Tenant Services
+- Tenant Use Cases
+- Tenant Controller
 
 Critério de conclusão:
 
-* CRUD necessário para a POC funcionando
-* Integração com Auth validada
+- CRUD necessário para a POC funcionando
+- Integração com Auth validada
 
 ---
 
@@ -100,14 +100,14 @@ Status: ✅ Concluído
 
 Escopo:
 
-* Template Entity
-* Campos Dinâmicos
-* CRUD de Template
+- Template Entity
+- Campos Dinâmicos
+- CRUD de Template
 
 Critério de conclusão:
 
-* Tenant possuir template ativo
-* Gestão dos campos funcionando
+- Tenant possuir template ativo
+- Gestão dos campos funcionando
 
 ---
 
@@ -117,16 +117,16 @@ Status: ✅ Concluído
 
 Escopo:
 
-* Criação de contratos
-* Snapshot do template
-* Alteração de status
-* Listagem
-* Filtros
-* Paginação
+- Criação de contratos
+- Snapshot do template
+- Alteração de status
+- Listagem
+- Filtros
+- Paginação
 
 Critério de conclusão:
 
-* Fluxo completo de contrato funcionando
+- Fluxo completo de contrato funcionando
 
 ---
 
@@ -136,13 +136,13 @@ Status: ✅ Concluído
 
 Escopo:
 
-* Auditoria
-* Histórico de alterações
-* Consulta de histórico
+- Auditoria
+- Histórico de alterações
+- Consulta de histórico
 
 Critério de conclusão:
 
-* Todas as alterações relevantes registradas
+- Todas as alterações relevantes registradas
 
 ---
 
@@ -150,15 +150,15 @@ Critério de conclusão:
 
 Antes de concluir qualquer módulo verificar:
 
-* [x] Nenhum any introduzido
-* [x] Nenhum CSS inline
-* [x] Nenhuma regra de negócio em controllers
-* [x] Prisma apenas em repositories
-* [x] Estrutura modular respeitada
-* [x] TailwindCSS utilizado
-* [x] ESLint sem erros
-* [x] TypeScript sem erros
-* [x] Build funcionando
+- [x] Nenhum any introduzido
+- [x] Nenhum CSS inline
+- [x] Nenhuma regra de negócio em controllers
+- [x] Prisma apenas em repositories
+- [x] Estrutura modular respeitada
+- [x] TailwindCSS utilizado
+- [x] ESLint sem erros
+- [x] TypeScript sem erros
+- [x] Build funcionando
 
 ---
 

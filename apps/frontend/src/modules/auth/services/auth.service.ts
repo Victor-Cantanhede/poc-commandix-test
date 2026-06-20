@@ -17,5 +17,5 @@ export const authService = {
     } else {
       delete api.defaults.headers.common['Authorization'];
     }
-  }
+  },
 };

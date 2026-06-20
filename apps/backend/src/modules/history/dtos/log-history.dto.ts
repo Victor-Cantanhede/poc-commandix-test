@@ -3,6 +3,6 @@ export class LogHistoryDto {
   userId!: string;
   action!: string;
   field?: string;
-  oldValue?: any;
-  newValue?: any;
+  oldValue?: unknown;
+  newValue?: unknown;
 }

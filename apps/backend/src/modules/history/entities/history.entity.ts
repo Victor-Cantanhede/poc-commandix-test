@@ -5,7 +5,7 @@ export class HistoryEntity {
   userId!: string;
   action!: string;
   field!: string | null;
-  oldValue!: any | null;
-  newValue!: any | null;
+  oldValue!: unknown | null;
+  newValue!: unknown | null;
   createdAt!: Date;
 }

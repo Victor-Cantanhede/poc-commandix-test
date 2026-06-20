@@ -5,6 +5,7 @@ import { useAuth } from '../hooks/useAuth';
 import { Button } from '@/shared/components/Button';
 import { Input } from '@/shared/components/Input';
 import { Command } from 'lucide-react';
+import { toast } from 'sonner';
 
 export function Login() {
   const [email, setEmail] = useState('');
@@ -21,10 +22,13 @@ export function Login() {
     try {
       const response = await authService.login({ email, password });
       login(response.accessToken, response.refreshToken, response.user);
+      toast.success('Login realizado com sucesso!');
       navigate('/');
     } catch (err: unknown) {
       const errorObj = err as { response?: { data?: { message?: string } } };
-      setError(errorObj.response?.data?.message || 'Erro ao realizar login');
+      const errorMessage = errorObj.response?.data?.message || 'Erro ao realizar login';
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -47,35 +51,38 @@ export function Login() {
               {error}
             </div>
           )}
-          
+
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-            <Input 
+            <Input
               label="Email corporativo"
-              type="email" 
-              value={email} 
-              onChange={e => setEmail(e.target.value)} 
-              required 
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
               placeholder="seu@email.com"
             />
-            
-            <Input 
+
+            <Input
               label="Senha"
-              type="password" 
-              value={password} 
-              onChange={e => setPassword(e.target.value)} 
-              required 
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
               placeholder="••••••••"
             />
-            
+
             <Button type="submit" isLoading={isLoading} className="mt-2 w-full font-semibold">
               Entrar na plataforma
             </Button>
           </form>
-          
+
           <div className="mt-8 text-center border-t border-border pt-6">
             <p className="text-sm text-muted-foreground">
               Primeira vez por aqui?{' '}
-              <Link to="/onboarding" className="text-primary hover:underline font-medium transition-colors">
+              <Link
+                to="/onboarding"
+                className="text-primary hover:underline font-medium transition-colors"
+              >
                 Criar um Tenant
               </Link>
             </p>

@@ -3,6 +3,7 @@ import { useAuth } from '../../modules/auth/hooks/useAuth';
 import { Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Users, LogOut, Command, FileCode2, FileSignature } from 'lucide-react';
 import { cn } from '@/shared/lib/utils';
+import { Button } from '@/shared/components/Button';
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -11,7 +12,7 @@ interface MainLayoutProps {
 export function MainLayout({ children }: MainLayoutProps) {
   const { logout, user } = useAuth();
   const location = useLocation();
-  
+
   const isAdmin = user?.role === 'ADMIN';
 
   return (
@@ -27,77 +28,107 @@ export function MainLayout({ children }: MainLayoutProps) {
             <p className="text-xs text-muted-foreground font-medium">Tenant Manager</p>
           </div>
         </div>
-        
+
         <nav className="flex-1 p-4 flex flex-col gap-2">
-          <Link 
-            to="/" 
+          <Link
+            to="/"
             className={cn(
-              "flex items-center gap-3 px-4 py-3 rounded-md transition-all font-medium text-sm group",
-              location.pathname === '/' 
-                ? "bg-primary text-primary-foreground shadow-md" 
-                : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+              'flex items-center gap-3 px-4 py-3 rounded-md transition-all font-medium text-sm group',
+              location.pathname === '/'
+                ? 'bg-primary text-primary-foreground shadow-md'
+                : 'text-muted-foreground hover:bg-secondary hover:text-foreground',
             )}
           >
-            <LayoutDashboard size={18} className={cn(location.pathname === '/' ? "text-primary-foreground" : "text-muted-foreground group-hover:text-foreground transition-colors")} />
+            <LayoutDashboard
+              size={18}
+              className={cn(
+                location.pathname === '/'
+                  ? 'text-primary-foreground'
+                  : 'text-muted-foreground group-hover:text-foreground transition-colors',
+              )}
+            />
             Dashboard
           </Link>
-          
-          <Link 
-            to="/contracts" 
+
+          <Link
+            to="/contracts"
             className={cn(
-              "flex items-center gap-3 px-4 py-3 rounded-md transition-all font-medium text-sm group",
-              location.pathname.startsWith('/contracts') 
-                ? "bg-primary text-primary-foreground shadow-md" 
-                : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+              'flex items-center gap-3 px-4 py-3 rounded-md transition-all font-medium text-sm group',
+              location.pathname.startsWith('/contracts')
+                ? 'bg-primary text-primary-foreground shadow-md'
+                : 'text-muted-foreground hover:bg-secondary hover:text-foreground',
             )}
           >
-            <FileSignature size={18} className={cn(location.pathname.startsWith('/contracts') ? "text-primary-foreground" : "text-muted-foreground group-hover:text-foreground transition-colors")} />
+            <FileSignature
+              size={18}
+              className={cn(
+                location.pathname.startsWith('/contracts')
+                  ? 'text-primary-foreground'
+                  : 'text-muted-foreground group-hover:text-foreground transition-colors',
+              )}
+            />
             Contratos
           </Link>
-          
+
           {isAdmin && (
             <>
-              <Link 
-                to="/tenants" 
+              <Link
+                to="/tenants"
                 className={cn(
-                  "flex items-center gap-3 px-4 py-3 rounded-md transition-all font-medium text-sm group",
-                  location.pathname === '/tenants' 
-                    ? "bg-primary text-primary-foreground shadow-md" 
-                    : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                  'flex items-center gap-3 px-4 py-3 rounded-md transition-all font-medium text-sm group',
+                  location.pathname === '/tenants'
+                    ? 'bg-primary text-primary-foreground shadow-md'
+                    : 'text-muted-foreground hover:bg-secondary hover:text-foreground',
                 )}
               >
-                <Users size={18} className={cn(location.pathname === '/tenants' ? "text-primary-foreground" : "text-muted-foreground group-hover:text-foreground transition-colors")} />
+                <Users
+                  size={18}
+                  className={cn(
+                    location.pathname === '/tenants'
+                      ? 'text-primary-foreground'
+                      : 'text-muted-foreground group-hover:text-foreground transition-colors',
+                  )}
+                />
                 Tenants
               </Link>
-              <Link 
-                to="/template" 
+              <Link
+                to="/template"
                 className={cn(
-                  "flex items-center gap-3 px-4 py-3 rounded-md transition-all font-medium text-sm group",
-                  location.pathname === '/template' 
-                    ? "bg-primary text-primary-foreground shadow-md" 
-                    : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                  'flex items-center gap-3 px-4 py-3 rounded-md transition-all font-medium text-sm group',
+                  location.pathname === '/template'
+                    ? 'bg-primary text-primary-foreground shadow-md'
+                    : 'text-muted-foreground hover:bg-secondary hover:text-foreground',
                 )}
               >
-                <FileCode2 size={18} className={cn(location.pathname === '/template' ? "text-primary-foreground" : "text-muted-foreground group-hover:text-foreground transition-colors")} />
+                <FileCode2
+                  size={18}
+                  className={cn(
+                    location.pathname === '/template'
+                      ? 'text-primary-foreground'
+                      : 'text-muted-foreground group-hover:text-foreground transition-colors',
+                  )}
+                />
                 Template
               </Link>
             </>
           )}
         </nav>
-        
+
         {user && (
           <div className="p-4 border-t border-border bg-card/50 flex items-center justify-between">
             <div className="flex flex-col">
               <span className="text-sm font-semibold truncate max-w-[140px]">{user.name}</span>
               <span className="text-xs text-muted-foreground">{user.role}</span>
             </div>
-            <button 
-              onClick={logout} 
-              className="text-muted-foreground hover:text-destructive transition-colors p-2 rounded-md hover:bg-destructive/10"
+            <Button
+              onClick={logout}
+              variant="ghost"
+              size="icon"
+              className="text-muted-foreground hover:text-destructive hover:bg-destructive/10"
               title="Sair"
             >
               <LogOut size={18} />
-            </button>
+            </Button>
           </div>
         )}
       </aside>

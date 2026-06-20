@@ -32,11 +32,11 @@ POC NÃO significa ignorar boas práticas.
 
 A POC deve ser:
 
-* simples
-* modular
-* legível
-* manutenível
-* testável
+- simples
+- modular
+- legível
+- manutenível
+- testável
 
 Sem overengineering.
 
@@ -85,9 +85,9 @@ Toda implementação deve seguir Separation of Concerns.
 
 ## Proibido
 
-* any
-* ts-ignore
-* ts-nocheck
+- any
+- ts-ignore
+- ts-nocheck
 
 ---
 
@@ -106,10 +106,10 @@ Nestes casos:
 
 Utilizar:
 
-* interfaces
-* types
-* generics
-* enums
+- interfaces
+- types
+- generics
+- enums
 
 quando apropriado.
 
@@ -125,9 +125,9 @@ strict mode habilitado.
 
 Stack:
 
-* NestJS
-* Prisma
-* PostgreSQL
+- NestJS
+- Prisma
+- PostgreSQL
 
 ---
 
@@ -195,44 +195,44 @@ module-name.module.ts
 
 Controllers:
 
-* apenas HTTP
-* nunca regra de negócio
+- apenas HTTP
+- nunca regra de negócio
 
 ---
 
 Application:
 
-* orquestração de casos de uso
+- orquestração de casos de uso
 
 ---
 
 Services:
 
-* regras de negócio
+- regras de negócio
 
 ---
 
 Repositories:
 
-* acesso a dados
+- acesso a dados
 
 ---
 
 DTOs:
 
-* contratos de entrada e saída
+- contratos de entrada e saída
 
 ---
 
 Interfaces:
 
-* contratos e abstrações
+- contratos e abstrações
 
 ---
 
 Entities:
 
-* representação do domínio
+- representação do domínio
 
 ---
 
@@ -284,10 +284,10 @@ Prisma apenas dentro da camada Repository.
 
 Prisma dentro:
 
-* controller
-* service
-* dto
-* entity
+- controller
+- service
+- dto
+- entity
 
 ---
 
@@ -295,11 +295,11 @@ Prisma dentro:
 
 Stack:
 
-* React
-* Vite
-* TypeScript
-* TailwindCSS
-* shadcn/ui (Tema Escuro Padrão)
+- React
+- Vite
+- TypeScript
+- TailwindCSS
+- shadcn/ui (Tema Escuro Padrão)
 
 ---
 
@@ -359,14 +359,14 @@ shared/
 
 Somente componentes baseados no shadcn/ui:
 
-* Button
-* Input
-* Modal
-* Spinner
-* Dialog
-* Card
-* Table
-* componentes genéricos
+- Button
+- Input
+- Modal
+- Spinner
+- Dialog
+- Card
+- Table
+- componentes genéricos
 
 ---
 
@@ -453,12 +453,12 @@ Antes de finalizar qualquer implementação:
 
 Antes de concluir qualquer tarefa responder internamente:
 
-* Existe any?
-* Existe CSS inline?
-* Existe regra de negócio em controller?
-* Existe Prisma fora do repository?
-* Existe código duplicado?
-* Existe módulo fora da arquitetura definida?
+- Existe any?
+- Existe CSS inline?
+- Existe regra de negócio em controller?
+- Existe Prisma fora do repository?
+- Existe código duplicado?
+- Existe módulo fora da arquitetura definida?
 
 Se alguma resposta for SIM:
 

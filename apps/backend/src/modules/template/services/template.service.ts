@@ -11,12 +11,12 @@ export class TemplateService {
 
   async getTemplate(tenantId: string): Promise<Template> {
     let template = await this.templateRepository.findByTenantId(tenantId);
-    
+
     if (!template) {
       // Cria um template vazio por padrão caso não exista
       template = await this.templateRepository.create(tenantId, []);
     }
-    
+
     return template;
   }
 

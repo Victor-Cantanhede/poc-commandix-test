@@ -6,11 +6,11 @@ Este projeto é uma Prova de Conceito (POC) para gestão de contratos multi-tena
 
 O objetivo principal é validar o domínio de negócio, os fluxos da aplicação e a arquitetura proposta, priorizando:
 
-* simplicidade;
-* legibilidade;
-* manutenibilidade;
-* velocidade de entrega;
-* baixo acoplamento.
+- simplicidade;
+- legibilidade;
+- manutenibilidade;
+- velocidade de entrega;
+- baixo acoplamento.
 
 A aplicação NÃO deve conter overengineering.
 
@@ -22,25 +22,25 @@ Toda solução deve ser a mais simples possível que atenda corretamente aos req
 
 ## Backend
 
-* NestJS
-* TypeScript
-* Prisma ORM
-* PostgreSQL
-* JWT Authentication
+- NestJS
+- TypeScript
+- Prisma ORM
+- PostgreSQL
+- JWT Authentication
 
 ## Frontend
 
-* React
-* Vite
-* TypeScript
-* TailwindCSS
-* shadcn/ui (Tema Escuro Padrão)
+- React
+- Vite
+- TypeScript
+- TailwindCSS
+- shadcn/ui (Tema Escuro Padrão)
 
 ## Infraestrutura
 
-* Docker
-* Docker Compose
-* pnpm Workspaces
+- Docker
+- Docker Compose
+- pnpm Workspaces
 
 ---
 
@@ -117,10 +117,10 @@ module-name/
 
 Responsáveis apenas por:
 
-* HTTP
-* Request
-* Response
-* Status Codes
+- HTTP
+- Request
+- Response
+- Status Codes
 
 Nunca conter regras de negócio.
 
@@ -130,9 +130,9 @@ Nunca conter regras de negócio.
 
 Responsáveis por:
 
-* orquestração;
-* coordenação de fluxo;
-* chamadas entre serviços.
+- orquestração;
+- coordenação de fluxo;
+- chamadas entre serviços.
 
 ---
 
@@ -140,8 +140,8 @@ Responsáveis por:
 
 Responsáveis por:
 
-* regras de negócio;
-* validações de domínio.
+- regras de negócio;
+- validações de domínio.
 
 ---
 
@@ -149,8 +149,8 @@ Responsáveis por:
 
 Responsáveis exclusivamente por:
 
-* acesso ao banco;
-* Prisma.
+- acesso ao banco;
+- Prisma.
 
 ---
 
@@ -158,8 +158,8 @@ Responsáveis exclusivamente por:
 
 Responsáveis por:
 
-* contratos de entrada;
-* contratos de saída.
+- contratos de entrada;
+- contratos de saída.
 
 ---
 
@@ -167,8 +167,8 @@ Responsáveis por:
 
 Responsáveis por:
 
-* abstrações;
-* contratos internos.
+- abstrações;
+- contratos internos.
 
 ---
 
@@ -198,9 +198,9 @@ presente em todas as entidades relevantes.
 
 Não utilizar:
 
-* database per tenant;
-* schema per tenant;
-* row level security.
+- database per tenant;
+- schema per tenant;
+- row level security.
 
 O isolamento deve ocorrer na aplicação.
 
@@ -212,11 +212,11 @@ O isolamento deve ocorrer na aplicação.
 
 Responsável por:
 
-* login;
-* refresh token;
-* geração de JWT;
-* validação de sessão;
-* autorização.
+- login;
+- refresh token;
+- geração de JWT;
+- validação de sessão;
+- autorização.
 
 Status:
 
@@ -228,9 +228,9 @@ IMPLEMENTADO
 
 Responsável por:
 
-* criação de tenants;
-* consulta de tenants;
-* gerenciamento do tenant atual.
+- criação de tenants;
+- consulta de tenants;
+- gerenciamento do tenant atual.
 
 Status:
 
@@ -242,8 +242,8 @@ PENDENTE
 
 Responsável por:
 
-* definição do contrato padrão;
-* gerenciamento dos campos dinâmicos.
+- definição do contrato padrão;
+- gerenciamento dos campos dinâmicos.
 
 Cada tenant possui apenas um template ativo.
 
@@ -257,11 +257,11 @@ PENDENTE
 
 Responsável por:
 
-* criação de contratos;
-* atualização de contratos;
-* mudança de status;
-* filtros;
-* paginação.
+- criação de contratos;
+- atualização de contratos;
+- mudança de status;
+- filtros;
+- paginação.
 
 Status:
 
@@ -273,9 +273,9 @@ PENDENTE
 
 Responsável por:
 
-* auditoria;
-* trilha de alterações;
-* histórico dos contratos.
+- auditoria;
+- trilha de alterações;
+- histórico dos contratos.
 
 Status:
 
@@ -301,8 +301,8 @@ Apenas um template por vez.
 
 Ao criar um contrato:
 
-* copiar o schema do template;
-* armazenar dentro do contrato.
+- copiar o schema do template;
+- armazenar dentro do contrato.
 
 Objetivo:
 
@@ -334,10 +334,10 @@ Estratégia simples.
 
 Sem:
 
-* Event Sourcing
-* CQRS
-* Kafka
-* RabbitMQ
+- Event Sourcing
+- CQRS
+- Kafka
+- RabbitMQ
 
 Toda alteração relevante deve gerar registro em tabela própria de histórico.
 
@@ -351,16 +351,16 @@ Utilizar filtros nativos do Prisma.
 
 Exemplos:
 
-* contains
-* equals
-* status
-* datas
+- contains
+- equals
+- status
+- datas
 
 Não implementar:
 
-* ElasticSearch
-* OpenSearch
-* Full Text Search
+- ElasticSearch
+- OpenSearch
+- Full Text Search
 
 ---
 
@@ -384,12 +384,12 @@ src/
 
 Somente componentes genéricos baseados em shadcn/ui:
 
-* Button
-* Input
-* Modal / Dialog
-* Spinner
-* Card
-* Table
+- Button
+- Input
+- Modal / Dialog
+- Spinner
+- Card
+- Table
 
 Nenhuma regra de negócio.
 
@@ -413,15 +413,15 @@ types/
 
 Obrigatório:
 
-* TailwindCSS
-* shadcn/ui (para todos os componentes base e layout)
-* Tema escuro como padrão (variáveis CSS)
+- TailwindCSS
+- shadcn/ui (para todos os componentes base e layout)
+- Tema escuro como padrão (variáveis CSS)
 
 Proibido:
 
-* CSS inline
-* style={{}}
-* lógica de estilos espalhada
+- CSS inline
+- style={{}}
+- lógica de estilos espalhada
 
 ---
 

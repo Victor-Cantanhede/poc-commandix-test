@@ -9,6 +9,15 @@ import { ContractModule } from './modules/contract/contract.module';
 import { HistoryModule } from './modules/history/history.module';
 
 @Module({
-  imports: [ConfigModule, PrismaModule, HealthModule, TenantModule, AuthModule, TemplateModule, ContractModule, HistoryModule],
+  imports: [
+    ConfigModule,
+    PrismaModule,
+    HealthModule,
+    TenantModule,
+    AuthModule,
+    TemplateModule,
+    ContractModule,
+    HistoryModule,
+  ],
 })
 export class AppModule {}

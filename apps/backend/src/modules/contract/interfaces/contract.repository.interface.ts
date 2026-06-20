@@ -10,8 +10,11 @@ export interface PaginatedResult<T> {
 }
 
 export interface IContractRepository {
-  create(contract: Omit<ContractEntity, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>): Promise<ContractEntity>;
+  create(
+    contract: Omit<ContractEntity, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>,
+  ): Promise<ContractEntity>;
   findById(id: string, tenantId: string): Promise<ContractEntity | null>;
   update(id: string, tenantId: string, data: Partial<ContractEntity>): Promise<ContractEntity>;
   findAll(tenantId: string, query: ContractQueryDto): Promise<PaginatedResult<ContractEntity>>;
+  softDelete?(id: string, tenantId: string): Promise<void>;
 }

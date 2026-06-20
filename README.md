@@ -3,6 +3,7 @@
 Fundação técnica do projeto baseada em Monólito Modular.
 
 ## Requisitos
+
 - Node.js (v20+)
 - pnpm (v8+)
 - Docker e Docker Compose

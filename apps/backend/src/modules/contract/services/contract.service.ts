@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException, BadRequestException, Inject } from '@nestjs/common';
-import { IContractRepository } from '../repositories/contract.repository.interface';
+import { IContractRepository } from '../interfaces/contract.repository.interface';
 import { TemplateService } from '../../template/services/template.service';
 import { CreateContractDto } from '../dtos/create-contract.dto';
 import { UpdateContractDto } from '../dtos/update-contract.dto';
@@ -29,13 +29,16 @@ export class ContractService {
       if (value !== undefined && value !== null && value !== '') {
         switch (field.type) {
           case 'number':
-            if (isNaN(Number(value))) throw new BadRequestException(`Field ${field.name} must be a number`);
+            if (isNaN(Number(value)))
+              throw new BadRequestException(`Field ${field.name} must be a number`);
             break;
           case 'boolean':
-            if (typeof value !== 'boolean') throw new BadRequestException(`Field ${field.name} must be a boolean`);
+            if (typeof value !== 'boolean')
+              throw new BadRequestException(`Field ${field.name} must be a boolean`);
             break;
           case 'date':
-            if (isNaN(Date.parse(value))) throw new BadRequestException(`Field ${field.name} must be a valid date`);
+            if (isNaN(Date.parse(value)))
+              throw new BadRequestException(`Field ${field.name} must be a valid date`);
             break;
           // text can be anything that converts to string
         }
@@ -54,7 +57,7 @@ export class ContractService {
     const contract = await this.contractRepository.create({
       tenantId,
       status: ContractStatus.DRAFT,
-      templateSnapshot: template.schema,
+      templateSnapshot: template.schema as unknown as Record<string, unknown>[],
       payload: data.payload,
     });
 
@@ -75,13 +78,23 @@ export class ContractService {
     return contract;
   }
 
-  async update(tenantId: string, userId: string, id: string, data: UpdateContractDto): Promise<ContractEntity> {
+  async update(
+    tenantId: string,
+    userId: string,
+    id: string,
+    data: UpdateContractDto,
+  ): Promise<ContractEntity> {
     const contract = await this.findById(tenantId, id);
+
+    if (data.payload && contract.status !== ContractStatus.DRAFT) {
+      throw new BadRequestException('Cannot edit contract payload unless status is DRAFT');
+    }
+
     const oldPayload = contract.payload as Record<string, any>;
 
     if (data.payload) {
       const mergedPayload = { ...oldPayload, ...data.payload };
-      this.validatePayload(contract.templateSnapshot as TemplateField[], mergedPayload);
+      this.validatePayload(contract.templateSnapshot as unknown as TemplateField[], mergedPayload);
       data.payload = mergedPayload;
     }
 
@@ -107,8 +120,30 @@ export class ContractService {
     return updated;
   }
 
-  async changeStatus(tenantId: string, userId: string, id: string, status: ContractStatus): Promise<ContractEntity> {
+  async changeStatus(
+    tenantId: string,
+    userId: string,
+    id: string,
+    status: ContractStatus,
+  ): Promise<ContractEntity> {
     const contract = await this.findById(tenantId, id);
+
+    if (contract.status === ContractStatus.CLOSED) {
+      throw new BadRequestException('Cannot change status of a CLOSED contract');
+    }
+
+    if (contract.status === ContractStatus.ACTIVE && status !== ContractStatus.CLOSED) {
+      throw new BadRequestException('ACTIVE contracts can only be transitioned to CLOSED');
+    }
+
+    if (
+      contract.status === ContractStatus.DRAFT &&
+      status !== ContractStatus.ACTIVE &&
+      status !== ContractStatus.CLOSED
+    ) {
+      throw new BadRequestException('Invalid status transition from DRAFT');
+    }
+
     const updated = await this.contractRepository.update(id, tenantId, { status });
 
     await this.historyService.log(tenantId, {
@@ -124,5 +159,24 @@ export class ContractService {
 
   async findAll(tenantId: string, query: ContractQueryDto) {
     return this.contractRepository.findAll(tenantId, query);
+  }
+
+  async remove(tenantId: string, userId: string, id: string): Promise<void> {
+    const contract = await this.findById(tenantId, id);
+
+    if (contract.status !== ContractStatus.DRAFT && contract.status !== ContractStatus.CLOSED) {
+      throw new BadRequestException('Can only delete DRAFT or CLOSED contracts');
+    }
+
+    if (this.contractRepository.softDelete) {
+      await this.contractRepository.softDelete(id, tenantId);
+      await this.historyService.log(tenantId, {
+        contractId: id,
+        userId,
+        action: 'DELETED',
+      });
+    } else {
+      throw new BadRequestException('Contract soft deletion is not implemented in the repository.');
+    }
   }
 }

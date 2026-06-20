@@ -4,17 +4,20 @@ Este documento rege todas as implementações neste projeto. Toda nova feature d
 Em caso de dúvida ou conflito com instruções isoladas, **ESTE DOCUMENTO PREVALECE**.
 
 ## FILOSOFIA DO PROJETO
+
 1. **É uma POC, mas com qualidade:** Deve ser simples, modular, legível, manutenível e testável.
 2. **Prioridades:** Legibilidade > Simplicidade > Manutenibilidade > Escalabilidade.
 3. **Sem overengineering:** Nunca implementar soluções mais complexas que o requisito exige.
 4. **Princípios Base:** SOLID, Clean Code, Separation of Concerns.
 
 ## TYPESCRIPT
+
 1. `strict` mode habilitado obrigatoriamente.
 2. Utilização rigorosa de interfaces, types, generics e enums.
 3. **PROIBIDO:** `any`, `ts-ignore`, `ts-nocheck` (Salvo exceção documentada em integração externa complexa).
 
 ## BACKEND (NestJS + Prisma + PostgreSQL)
+
 1. **Arquitetura:** MODULAR MONOLITH.
 2. **Estrutura Proibida:** Pastas globais na raiz (`src/controllers`, `src/services`, etc.).
 3. **Estrutura Obrigatória de Módulo:**
@@ -32,22 +35,23 @@ Em caso de dúvida ou conflito com instruções isoladas, **ESTE DOCUMENTO PREVA
      module-name.module.ts
    ```
 4. **Responsabilidades:**
-   - *Controllers:* Apenas HTTP, nunca contêm regras de negócio ou queries SQL. Não chamam Prisma diretamente.
-   - *Application/Use-Cases:* Orquestração dos fluxos.
-   - *Services:* Regras de negócio puras. Máximo 300 linhas.
-   - *Repositories:* Única camada permitida para usar o Prisma ORM (Acesso a dados).
-   - *DTOs:* Contratos rígidos de I/O. **OBRIGATÓRIO:** Todo DTO de entrada deve utilizar decorators do `class-validator` e a aplicação deve possuir `ValidationPipe` global.
+   - _Controllers:_ Apenas HTTP, nunca contêm regras de negócio ou queries SQL. Não chamam Prisma diretamente.
+   - _Application/Use-Cases:_ Orquestração dos fluxos.
+   - _Services:_ Regras de negócio puras. Máximo 300 linhas.
+   - _Repositories:_ Única camada permitida para usar o Prisma ORM (Acesso a dados).
+   - _DTOs:_ Contratos rígidos de I/O. **OBRIGATÓRIO:** Todo DTO de entrada deve utilizar decorators do `class-validator` e a aplicação deve possuir `ValidationPipe` global.
 
 ## BANCO DE DADOS E PRISMA
+
 1. **Migrations:** O versionamento do banco de dados deve ser feito estritamente utilizando `prisma migrate dev` (desenvolvimento) e `prisma migrate deploy` (produção).
 2. **PROIBIDO:** Utilizar `prisma db push` (exceto em fases de prototipação isolada que não requeiram versão, porém na POC oficial é **proibido**).
 
-
 ## FRONTEND (React + Vite + TailwindCSS + shadcn/ui)
+
 1. **Estrutura de Pastas:** `src/app/`, `src/modules/`, `src/shared/`.
 2. **Estrutura de Módulo Frontend:** `components/`, `pages/`, `services/`, `hooks/`, `types/`.
 3. **Estilização:**
-   - **OBRIGATÓRIO:** Utilizar os componentes base do `shadcn/ui` para a criação de elementos genéricos (Select, Table, Card, Input, Label, Badge, Checkbox, etc). 
+   - **OBRIGATÓRIO:** Utilizar os componentes base do `shadcn/ui` para a criação de elementos genéricos (Select, Table, Card, Input, Label, Badge, Checkbox, etc).
    - **OBRIGATÓRIO (Geração de Componentes):** A geração desses componentes deve ser feita ESTRITAMENTE via CLI oficial (`npx shadcn@latest add <componente>`) instalando-os na pasta padrão do repositório. O uso de tags HTML nativas equivalentes (ex: `<select>`, `<table>`, `<input type="checkbox">`) é **TOTALMENTE PROIBIDO**. Exceções apenas em casos raríssimos que exijam UI completamente customizada e impossível de ser feita via Shadcn.
    - **OBRIGATÓRIO:** TailwindCSS com utility classes e tema escuro como padrão configurado via variáveis CSS.
    - **PROIBIDO:** CSS inline (`style={{}}`) ou arquivos CSS específicos por componente.
@@ -62,6 +66,7 @@ Em caso de dúvida ou conflito com instruções isoladas, **ESTE DOCUMENTO PREVA
    - **PROIBIDO:** Utilizar `alert()` nativo do navegador para qualquer tipo de feedback.
 
 ## QUALIDADE & NOMENCLATURA
+
 1. Nomenclatura:
    - Arquivos: `kebab-case`
    - Classes: `PascalCase`

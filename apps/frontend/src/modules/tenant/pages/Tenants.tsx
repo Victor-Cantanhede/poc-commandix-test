@@ -4,14 +4,23 @@ import { Tenant } from '../types/tenant.types';
 import { Button } from '@/shared/components/Button';
 import { Input } from '@/shared/components/Input';
 import { Modal } from '@/shared/components/Modal';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/shared/components/ui/table';
 import { Edit2, Trash2, Plus, Building2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 export function Tenants() {
   const [tenants, setTenants] = useState<Tenant[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  
+
   const [selectedTenant, setSelectedTenant] = useState<Tenant | null>(null);
   const [formData, setFormData] = useState({ name: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -26,6 +35,7 @@ export function Tenants() {
       const data = await tenantService.getAll();
       setTenants(data);
     } catch (error) {
+      toast.error('Erro ao buscar tenants');
       console.error('Failed to fetch tenants:', error);
     } finally {
       setIsLoading(false);
@@ -60,7 +70,9 @@ export function Tenants() {
       }
       await fetchTenants();
       setIsModalOpen(false);
+      toast.success(selectedTenant ? 'Tenant atualizado com sucesso' : 'Tenant criado com sucesso');
     } catch (error) {
+      toast.error('Erro ao salvar tenant');
       console.error('Failed to save tenant:', error);
     } finally {
       setIsSubmitting(false);
@@ -74,7 +86,9 @@ export function Tenants() {
       await tenantService.delete(selectedTenant.id);
       await fetchTenants();
       setIsDeleteModalOpen(false);
+      toast.success('Tenant excluído com sucesso');
     } catch (error) {
+      toast.error('Erro ao excluir tenant');
       console.error('Failed to delete tenant:', error);
     } finally {
       setIsSubmitting(false);
@@ -99,7 +113,9 @@ export function Tenants() {
             </div>
             Gestão de Tenants
           </h2>
-          <p className="text-muted-foreground mt-1">Gerencie os locatários e empresas do sistema.</p>
+          <p className="text-muted-foreground mt-1">
+            Gerencie os locatários e empresas do sistema.
+          </p>
         </div>
         <Button onClick={handleOpenCreate}>
           <Plus size={18} className="mr-2" /> Novo Tenant
@@ -107,64 +123,66 @@ export function Tenants() {
       </div>
 
       <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden flex-1">
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="bg-muted/50 border-b border-border text-muted-foreground text-sm">
-              <th className="py-4 px-6 font-semibold">Nome da Empresa</th>
-              <th className="py-4 px-6 font-semibold">Data de Criação</th>
-              <th className="py-4 px-6 font-semibold w-24">Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            {tenants.map(tenant => (
-              <tr key={tenant.id} className="border-b border-border hover:bg-muted/30 transition-colors">
-                <td className="py-4 px-6 font-medium text-foreground">{tenant.name}</td>
-                <td className="py-4 px-6 text-muted-foreground text-sm">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Nome da Empresa</TableHead>
+              <TableHead>Data de Criação</TableHead>
+              <TableHead className="w-24">Ações</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {tenants.map((tenant) => (
+              <TableRow key={tenant.id}>
+                <TableCell className="font-medium">{tenant.name}</TableCell>
+                <TableCell className="text-muted-foreground">
                   {new Date(tenant.createdAt).toLocaleDateString('pt-BR')}
-                </td>
-                <td className="py-4 px-6">
+                </TableCell>
+                <TableCell>
                   <div className="flex gap-2">
-                    <button 
+                    <Button
+                      variant="ghost"
+                      size="icon"
                       onClick={() => handleOpenEdit(tenant)}
-                      className="p-2 text-primary hover:bg-primary/10 rounded-md transition-colors"
                       title="Editar"
                     >
-                      <Edit2 size={16} />
-                    </button>
-                    <button 
+                      <Edit2 size={16} className="text-primary" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
                       onClick={() => handleOpenDelete(tenant)}
-                      className="p-2 text-destructive hover:bg-destructive/10 rounded-md transition-colors"
                       title="Excluir"
                     >
-                      <Trash2 size={16} />
-                    </button>
+                      <Trash2 size={16} className="text-destructive" />
+                    </Button>
                   </div>
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ))}
             {tenants.length === 0 && (
-              <tr>
-                <td colSpan={3} className="py-12 text-center text-muted-foreground">
+              <TableRow>
+                <TableCell colSpan={3} className="h-24 text-center">
                   Nenhum tenant cadastrado.
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             )}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
 
       {/* Modal Criar/Editar */}
-      <Modal 
-        isOpen={isModalOpen} 
+      <Modal
+        isOpen={isModalOpen}
         onClose={() => !isSubmitting && setIsModalOpen(false)}
         title={selectedTenant ? 'Editar Tenant' : 'Novo Tenant'}
       >
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-          <Input 
-            label="Nome da Empresa" 
+          <Input
+            label="Nome da Empresa"
             placeholder="Ex: Acme Corp"
             value={formData.name}
-            onChange={e => setFormData({ ...formData, name: e.target.value })}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             required
             autoFocus
           />
@@ -180,15 +198,16 @@ export function Tenants() {
       </Modal>
 
       {/* Modal Excluir */}
-      <Modal 
-        isOpen={isDeleteModalOpen} 
+      <Modal
+        isOpen={isDeleteModalOpen}
         onClose={() => !isSubmitting && setIsDeleteModalOpen(false)}
         title="Confirmar Exclusão"
       >
         <div className="flex flex-col gap-4">
           <p className="text-muted-foreground">
-            Tem certeza que deseja excluir o tenant <strong className="text-foreground">{selectedTenant?.name}</strong>? 
-            Esta ação removerá o acesso aos dados da empresa.
+            Tem certeza que deseja excluir o tenant{' '}
+            <strong className="text-foreground">{selectedTenant?.name}</strong>? Esta ação removerá
+            o acesso aos dados da empresa.
           </p>
           <div className="flex justify-end gap-3 mt-4 pt-4 border-t border-border">
             <Button type="button" variant="ghost" onClick={() => setIsDeleteModalOpen(false)}>

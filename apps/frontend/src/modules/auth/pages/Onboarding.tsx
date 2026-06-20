@@ -4,6 +4,7 @@ import { authService } from '../services/auth.service';
 import { Button } from '@/shared/components/Button';
 import { Input } from '@/shared/components/Input';
 import { Command } from 'lucide-react';
+import { toast } from 'sonner';
 
 export function Onboarding() {
   const [tenantName, setTenantName] = useState('');
@@ -20,7 +21,7 @@ export function Onboarding() {
     setError('');
     try {
       await authService.onboarding({ tenantName, userName, email, password });
-      alert('Tenant criado com sucesso! Faça login.');
+      toast.success('Tenant criado com sucesso! Faça login.');
       navigate('/login');
     } catch (err: unknown) {
       const errorObj = err as { response?: { data?: { message?: string } } };
@@ -38,7 +39,9 @@ export function Onboarding() {
             <Command size={32} />
           </div>
           <h1 className="text-3xl font-bold tracking-tight text-foreground">Novo Tenant</h1>
-          <p className="text-muted-foreground font-medium text-center">Crie sua conta corporativa no Commandix</p>
+          <p className="text-muted-foreground font-medium text-center">
+            Crie sua conta corporativa no Commandix
+          </p>
         </div>
 
         <div className="bg-card border border-border rounded-xl shadow-lg p-8">
@@ -47,53 +50,56 @@ export function Onboarding() {
               {error}
             </div>
           )}
-          
+
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-            <Input 
+            <Input
               label="Nome da Empresa"
-              type="text" 
-              value={tenantName} 
-              onChange={e => setTenantName(e.target.value)} 
-              required 
+              type="text"
+              value={tenantName}
+              onChange={(e) => setTenantName(e.target.value)}
+              required
               placeholder="Sua Empresa LTDA"
             />
-            
-            <Input 
+
+            <Input
               label="Seu Nome"
-              type="text" 
-              value={userName} 
-              onChange={e => setUserName(e.target.value)} 
-              required 
+              type="text"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+              required
               placeholder="João Silva"
             />
-            
-            <Input 
+
+            <Input
               label="Email do Administrador"
-              type="email" 
-              value={email} 
-              onChange={e => setEmail(e.target.value)} 
-              required 
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
               placeholder="admin@empresa.com"
             />
-            
-            <Input 
+
+            <Input
               label="Senha de Acesso"
-              type="password" 
-              value={password} 
-              onChange={e => setPassword(e.target.value)} 
-              required 
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
               placeholder="••••••••"
             />
-            
+
             <Button type="submit" isLoading={isLoading} className="mt-2 w-full font-semibold">
               Finalizar Cadastro
             </Button>
           </form>
-          
+
           <div className="mt-8 text-center border-t border-border pt-6">
             <p className="text-sm text-muted-foreground">
               Já possui uma conta?{' '}
-              <Link to="/login" className="text-primary hover:underline font-medium transition-colors">
+              <Link
+                to="/login"
+                className="text-primary hover:underline font-medium transition-colors"
+              >
                 Fazer Login
               </Link>
             </p>
