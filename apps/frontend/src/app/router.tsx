@@ -5,7 +5,8 @@ import { Onboarding } from '../modules/auth/pages/Onboarding';
 import { Tenants } from '../modules/tenant/pages/Tenants';
 import { Users, Building, Activity, FileText } from 'lucide-react';
 import { TemplateConfig } from '../modules/template/pages/TemplateConfig';
-
+import { ContractList } from '../modules/contract/pages/ContractList';
+import { ContractDetail } from '../modules/contract/pages/ContractDetail';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
   {
@@ -64,6 +65,18 @@ export const router: ReturnType<typeof createBrowserRouter> = createBrowserRoute
                 </div>
               </div>
             ),
+          },
+          {
+            path: 'contracts',
+            element: <ContractList />,
+          },
+          {
+            path: 'contracts/new',
+            element: <ContractDetail />,
+          },
+          {
+            path: 'contracts/:id',
+            element: <ContractDetail />,
           },
           {
             path: '/',

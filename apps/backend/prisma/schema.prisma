@@ -20,7 +20,8 @@ model Tenant {
 
   users     User[]
   template  Template?
-  // Outras relações futuras: Contracts, HistoryLogs
+  contracts Contract[]
+  // Outras relações futuras: HistoryLogs
 }
 
 model User {
@@ -34,7 +35,7 @@ model User {
   createdAt    DateTime  @default(now())
   deletedAt    DateTime?
 
-  tenant       Tenant    @relation(fields: [tenantId], references: [id])
+  tenant Tenant @relation(fields: [tenantId], references: [id])
 
   @@index([tenantId])
 }
@@ -46,5 +47,26 @@ model Template {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+}
+
+enum ContractStatus {
+  DRAFT
+  ACTIVE
+  CLOSED
+}
+
+model Contract {
+  id               String         @id @default(uuid())
+  tenantId         String
+  status           ContractStatus @default(DRAFT)
+  templateSnapshot Json
+  payload          Json
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  deletedAt        DateTime?
+
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+
+  @@index([tenantId])
 }

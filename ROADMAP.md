@@ -113,7 +113,7 @@ Critério de conclusão:
 
 # Fase 05 — Contract
 
-Status: ⬜ Não iniciado
+Status: ✅ Concluído
 
 Escopo:
 

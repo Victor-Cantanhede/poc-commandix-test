@@ -47,12 +47,14 @@ Em caso de dúvida ou conflito com instruções isoladas, **ESTE DOCUMENTO PREVA
 1. **Estrutura de Pastas:** `src/app/`, `src/modules/`, `src/shared/`.
 2. **Estrutura de Módulo Frontend:** `components/`, `pages/`, `services/`, `hooks/`, `types/`.
 3. **Estilização:**
-   - **OBRIGATÓRIO:** Utilizar os componentes base do `shadcn/ui` para a criação de elementos genéricos (exceções apenas em casos raríssimos que exijam UI completamente customizada).
+   - **OBRIGATÓRIO:** Utilizar os componentes base do `shadcn/ui` para a criação de elementos genéricos (Select, Table, Card, Input, Label, Badge, Checkbox, etc). 
+   - **OBRIGATÓRIO (Geração de Componentes):** A geração desses componentes deve ser feita ESTRITAMENTE via CLI oficial (`npx shadcn@latest add <componente>`) instalando-os na pasta padrão do repositório. O uso de tags HTML nativas equivalentes (ex: `<select>`, `<table>`, `<input type="checkbox">`) é **TOTALMENTE PROIBIDO**. Exceções apenas em casos raríssimos que exijam UI completamente customizada e impossível de ser feita via Shadcn.
    - **OBRIGATÓRIO:** TailwindCSS com utility classes e tema escuro como padrão configurado via variáveis CSS.
    - **PROIBIDO:** CSS inline (`style={{}}`) ou arquivos CSS específicos por componente.
 4. **Comunicação e Compartilhamento:**
    - Módulo `shared` serve APENAS genéricos (UI components como Button, Input, Modal implementados com shadcn/ui em `shared/components/`). Proibido ter regra de negócio.
    - Toda chamada HTTP **DEVE** ficar na pasta `services/` do módulo. Proibido chamadas espalhadas.
+   - **OBRIGATÓRIO:** O Backend possui um prefixo global `/api` configurado (`app.setGlobalPrefix('api')`). Portanto, as rotas chamadas no Frontend através do Axios (`api.get`, `api.post`, etc) DEVEM OBRIGATORIAMENTE incluir o prefixo `/api/` no path (ex: `/api/contracts`).
    - Imports absolutos configurados via alias (`@/*`).
 5. **Feedbacks Visuais (Toasts):**
    - **OBRIGATÓRIO:** Toda ação originada pelo usuário (ex: submissão de formulários, alterações de estado no backend via POST/PUT/DELETE) deve exibir um feedback visual de sucesso ou erro.
