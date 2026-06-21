@@ -121,7 +121,7 @@ describe('ContractModule (e2e)', () => {
       expect(contracts[0].payload.clientName).toContain('Apple');
       
       // Should not contain Microsoft
-      const foundMicrosoft = contracts.find((c: any) => c.payload.clientName.includes('Microsoft'));
+      const foundMicrosoft = contracts.find((c: Record<string, unknown>) => (c.payload as Record<string, unknown>).clientName?.toString().includes('Microsoft'));
       expect(foundMicrosoft).toBeUndefined();
     });
   });

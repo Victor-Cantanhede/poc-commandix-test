@@ -68,7 +68,7 @@ describe('TenantModule (e2e) - Isolation & RBAC', () => {
       // Verify that admin B is not in the list
       const users = response.body;
       expect(users.length).toBeGreaterThan(0);
-      const foundAdminB = users.find((u: any) => u.email === 'adminB@test.com');
+      const foundAdminB = users.find((u: Record<string, unknown>) => u.email === 'adminB@test.com');
       expect(foundAdminB).toBeUndefined();
     });
 

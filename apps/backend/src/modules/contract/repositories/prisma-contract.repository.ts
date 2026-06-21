@@ -82,15 +82,14 @@ export class PrismaContractRepository implements IContractRepository {
     }
 
     if (startDate || endDate) {
-      where.createdAt = {};
+      const createdAtQuery: { gte?: Date; lte?: Date } = {};
       if (startDate) {
-        if (!where.createdAt) where.createdAt = {};
-        (where.createdAt as any).gte = new Date(startDate);
+        createdAtQuery.gte = new Date(startDate);
       }
       if (endDate) {
-        if (!where.createdAt) where.createdAt = {};
-        (where.createdAt as any).lte = new Date(endDate);
+        createdAtQuery.lte = new Date(endDate);
       }
+      where.createdAt = createdAtQuery;
     }
 
     if (search && searchFields && searchFields.length > 0) {

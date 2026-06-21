@@ -4,6 +4,7 @@ import { OnboardingDto } from '../dtos/tenant.dto';
 import { Role } from '@prisma/client';
 import { ITenantRepository } from '../interfaces/tenant-repository.interface';
 import { TenantEntity } from '../entities/tenant.entity';
+import { CreateUserDto, UpdateUserDto } from '../dtos/user.dto';
 
 @Injectable()
 export class TenantRepository implements ITenantRepository {
@@ -69,7 +70,7 @@ export class TenantRepository implements ITenantRepository {
     });
   }
 
-  async createUser(tenantId: string, data: any, passwordHash: string) {
+  async createUser(tenantId: string, data: CreateUserDto, passwordHash: string) {
     return this.prisma.user.create({
       data: {
         tenantId,
@@ -90,7 +91,7 @@ export class TenantRepository implements ITenantRepository {
     });
   }
 
-  async updateUser(userId: string, data: any) {
+  async updateUser(userId: string, data: UpdateUserDto) {
     return this.prisma.user.update({
       where: { id: userId },
       data: {

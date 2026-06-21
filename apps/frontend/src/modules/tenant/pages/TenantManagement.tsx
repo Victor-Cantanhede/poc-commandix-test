@@ -125,8 +125,15 @@ export function TenantManagement() {
       }
       await fetchData();
       setIsUserModalOpen(false);
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Erro ao salvar usuário');
+    } catch (error: unknown) {
+      if (error && typeof error === 'object' && 'response' in error) {
+        const errObj = error as { response?: { data?: { message?: string } } };
+        toast.error(errObj.response?.data?.message || 'Erro ao salvar usuário');
+      } else if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error('Erro ao salvar usuário');
+      }
       console.error(error);
     } finally {
       setIsSubmitting(false);
@@ -141,8 +148,15 @@ export function TenantManagement() {
       await fetchData();
       setIsDeleteUserModalOpen(false);
       toast.success('Usuário excluído com sucesso');
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Erro ao excluir usuário');
+    } catch (error: unknown) {
+      if (error && typeof error === 'object' && 'response' in error) {
+        const errObj = error as { response?: { data?: { message?: string } } };
+        toast.error(errObj.response?.data?.message || 'Erro ao excluir usuário');
+      } else if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error('Erro ao excluir usuário');
+      }
       console.error(error);
     } finally {
       setIsSubmitting(false);

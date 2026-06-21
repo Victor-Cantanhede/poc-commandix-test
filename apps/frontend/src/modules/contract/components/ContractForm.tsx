@@ -3,11 +3,12 @@ import { Button } from '@/shared/components/Button';
 import { Input } from '@/shared/components/Input';
 import { Label } from '@/shared/components/ui/label';
 import { Checkbox } from '@/shared/components/ui/checkbox';
+import { TemplateField } from '../../template/types/template.types';
 
 interface ContractFormProps {
-  schema: any[];
-  initialData?: Record<string, any>;
-  onSubmit: (data: Record<string, any>) => void;
+  schema: TemplateField[];
+  initialData?: Record<string, unknown>;
+  onSubmit: (data: Record<string, unknown>) => void;
   isLoading?: boolean;
   readOnly?: boolean;
 }
@@ -19,9 +20,9 @@ export function ContractForm({
   isLoading,
   readOnly,
 }: ContractFormProps) {
-  const [formData, setFormData] = useState<Record<string, any>>(initialData);
+  const [formData, setFormData] = useState<Record<string, unknown>>(initialData);
 
-  const handleChange = (name: string, value: any) => {
+  const handleChange = (name: string, value: unknown) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -42,7 +43,7 @@ export function ContractForm({
             {field.type === 'text' && (
               <Input
                 type="text"
-                value={formData[field.name] || ''}
+                value={(formData[field.name] as string) || ''}
                 onChange={(e) => handleChange(field.name, e.target.value)}
                 required={field.required}
                 disabled={readOnly}
@@ -52,7 +53,7 @@ export function ContractForm({
             {field.type === 'number' && (
               <Input
                 type="number"
-                value={formData[field.name] || ''}
+                value={(formData[field.name] as number) || ''}
                 onChange={(e) =>
                   handleChange(field.name, e.target.value ? Number(e.target.value) : '')
                 }
@@ -64,7 +65,7 @@ export function ContractForm({
             {field.type === 'date' && (
               <Input
                 type="date"
-                value={formData[field.name] || ''}
+                value={(formData[field.name] as string) || ''}
                 onChange={(e) => handleChange(field.name, e.target.value)}
                 required={field.required}
                 disabled={readOnly}

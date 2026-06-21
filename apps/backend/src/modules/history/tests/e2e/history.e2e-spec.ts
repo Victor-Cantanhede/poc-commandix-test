@@ -71,7 +71,7 @@ describe('HistoryModule (e2e)', () => {
       expect(Array.isArray(response.body)).toBeTruthy();
       expect(response.body.length).toBeGreaterThan(0);
       
-      const creationLog = response.body.find((log: any) => log.action === 'CREATED');
+      const creationLog = response.body.find((log: Record<string, unknown>) => log.action === 'CREATED');
       expect(creationLog).toBeDefined();
     });
 
@@ -93,7 +93,7 @@ describe('HistoryModule (e2e)', () => {
         .set('Authorization', `Bearer ${token}`)
         .expect(200);
 
-      const updateLog = response.body.find((log: any) => log.action === 'UPDATED_FIELD');
+      const updateLog = response.body.find((log: Record<string, unknown>) => log.action === 'UPDATED_FIELD');
       expect(updateLog).toBeDefined();
       expect(updateLog.field).toBe('clientName');
       expect(updateLog.newValue).toBe('Updated History Client');

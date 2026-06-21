@@ -48,7 +48,7 @@ export function ContractHistory({ contractId }: ContractHistoryProps) {
     }
   };
 
-  const formatValue = (val: any) => {
+  const formatValue = (val: unknown) => {
     if (val === null || val === undefined) return 'Vazio';
     if (typeof val === 'object') return JSON.stringify(val);
     if (typeof val === 'boolean') return val ? 'Sim' : 'Não';

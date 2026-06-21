@@ -62,8 +62,15 @@ export function TemplateConfig() {
       setError(null);
       const data = await templateService.getTemplate();
       reset({ schema: data.schema });
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Erro ao carregar template');
+    } catch (err: unknown) {
+      if (err && typeof err === 'object' && 'response' in err) {
+        const errObj = err as { response?: { data?: { message?: string } } };
+        setError(errObj.response?.data?.message || 'Erro ao carregar template');
+      } else if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Erro ao carregar template');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -84,8 +91,15 @@ export function TemplateConfig() {
 
       await templateService.updateTemplate(values.schema);
       toast.success('Template salvo com sucesso!');
-    } catch (err: any) {
-      toast.error(err.response?.data?.message || 'Erro ao salvar template');
+    } catch (err: unknown) {
+      if (err && typeof err === 'object' && 'response' in err) {
+        const errObj = err as { response?: { data?: { message?: string } } };
+        toast.error(errObj.response?.data?.message || 'Erro ao salvar template');
+      } else if (err instanceof Error) {
+        toast.error(err.message);
+      } else {
+        toast.error('Erro ao salvar template');
+      }
     } finally {
       setIsSaving(false);
     }
@@ -147,7 +161,7 @@ export function TemplateConfig() {
                 <label className="text-sm font-medium">Tipo</label>
                 <Select
                   value={field.type}
-                  onValueChange={(value: any) => {
+                  onValueChange={(value: TemplateFieldType) => {
                     const currentSchema = control._formValues.schema;
                     currentSchema[index].type = value;
                     reset({ schema: currentSchema });

@@ -8,8 +8,8 @@ export interface Contract {
   id: string;
   tenantId: string;
   status: ContractStatus;
-  templateSnapshot: any[];
-  payload: Record<string, any>;
+  templateSnapshot: Record<string, unknown>[];
+  payload: Record<string, unknown>;
   createdAt: string;
   updatedAt: string;
 }
@@ -36,8 +36,8 @@ export interface ContractHistory {
   contractId: string;
   action: 'CREATED' | 'UPDATED_FIELD' | 'STATUS_CHANGED';
   field?: string;
-  oldValue?: any;
-  newValue?: any;
+  oldValue?: unknown;
+  newValue?: unknown;
   createdAt: string;
   user: {
     name: string;
