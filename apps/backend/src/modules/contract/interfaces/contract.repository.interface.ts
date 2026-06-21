@@ -15,6 +15,10 @@ export interface IContractRepository {
   ): Promise<ContractEntity>;
   findById(id: string, tenantId: string): Promise<ContractEntity | null>;
   update(id: string, tenantId: string, data: Partial<ContractEntity>): Promise<ContractEntity>;
-  findAll(tenantId: string, query: ContractQueryDto): Promise<PaginatedResult<ContractEntity>>;
+  findAll(
+    tenantId: string,
+    query: ContractQueryDto,
+    searchFields?: string[],
+  ): Promise<PaginatedResult<ContractEntity>>;
   softDelete?(id: string, tenantId: string): Promise<void>;
 }

@@ -158,7 +158,18 @@ export class ContractService {
   }
 
   async findAll(tenantId: string, query: ContractQueryDto) {
-    return this.contractRepository.findAll(tenantId, query);
+    let searchFields: string[] = [];
+
+    if (query.search) {
+      const template = await this.templateService.getTemplate(tenantId);
+      if (template && template.schema) {
+        searchFields = template.schema
+          .filter((field) => field.type === 'text')
+          .map((field) => field.name);
+      }
+    }
+
+    return this.contractRepository.findAll(tenantId, query, searchFields);
   }
 
   async remove(tenantId: string, userId: string, id: string): Promise<void> {

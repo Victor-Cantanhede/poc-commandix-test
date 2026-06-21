@@ -67,6 +67,7 @@ export class PrismaContractRepository implements IContractRepository {
   async findAll(
     tenantId: string,
     query: ContractQueryDto,
+    searchFields?: string[],
   ): Promise<PaginatedResult<ContractEntity>> {
     const { page = 1, limit = 10, status, search, startDate, endDate } = query;
     const skip = (page - 1) * limit;
@@ -92,75 +93,27 @@ export class PrismaContractRepository implements IContractRepository {
       }
     }
 
-    if (search) {
-      // Usaremos query raw abaixo para busca textual no JSON
+    if (search && searchFields && searchFields.length > 0) {
+      where.OR = searchFields.map((field) => ({
+        payload: {
+          path: [field],
+          string_contains: search,
+        },
+      }));
     }
 
-    let contracts;
-    let total;
+    const [items, count] = await Promise.all([
+      this.prisma.contract.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
+      }),
+      this.prisma.contract.count({ where }),
+    ]);
 
-    if (search) {
-      // Raw query for search text inside JSON
-      const searchPattern = `%${search}%`;
-
-      let rawQueryStr = `SELECT * FROM "Contract" WHERE "tenantId" = $1 AND "deletedAt" IS NULL AND "payload"::text ILIKE $2`;
-      let countQueryStr = `SELECT COUNT(*) as count FROM "Contract" WHERE "tenantId" = $1 AND "deletedAt" IS NULL AND "payload"::text ILIKE $2`;
-
-      const params: unknown[] = [tenantId, searchPattern];
-      let paramIndex = 3;
-
-      if (status) {
-        rawQueryStr += ` AND "status" = $${paramIndex}::"ContractStatus"`;
-        countQueryStr += ` AND "status" = $${paramIndex}::"ContractStatus"`;
-        params.push(status);
-        paramIndex++;
-      }
-
-      if (startDate) {
-        rawQueryStr += ` AND "createdAt" >= $${paramIndex}`;
-        countQueryStr += ` AND "createdAt" >= $${paramIndex}`;
-        params.push(new Date(startDate));
-        paramIndex++;
-      }
-
-      if (endDate) {
-        // Include entire end date by setting time to 23:59:59 or simply use <= if the date includes time.
-        // In DTO, if it's just 'YYYY-MM-DD', new Date() parses it. It's safer to use a Date object directly.
-        const endD = new Date(endDate);
-        endD.setHours(23, 59, 59, 999);
-        rawQueryStr += ` AND "createdAt" <= $${paramIndex}`;
-        countQueryStr += ` AND "createdAt" <= $${paramIndex}`;
-        params.push(endD);
-        paramIndex++;
-      }
-
-      // Simplificado sem datas no Raw para não encher de lógica
-      rawQueryStr += ` ORDER BY "createdAt" DESC LIMIT ${limit} OFFSET ${skip}`;
-
-      const rawContracts = await this.prisma.$queryRawUnsafe<Record<string, unknown>[]>(
-        rawQueryStr,
-        ...params,
-      );
-      const rawCount = await this.prisma.$queryRawUnsafe<{ count: number }[]>(
-        countQueryStr,
-        ...params,
-      );
-
-      contracts = rawContracts.map((c: Record<string, unknown>) => this.toEntity(c));
-      total = Number(rawCount[0].count);
-    } else {
-      const [items, count] = await Promise.all([
-        this.prisma.contract.findMany({
-          where,
-          skip,
-          take: limit,
-          orderBy: { createdAt: 'desc' },
-        }),
-        this.prisma.contract.count({ where }),
-      ]);
-      contracts = items.map((c: Record<string, unknown>) => this.toEntity(c));
-      total = count;
-    }
+    const contracts = items.map((c: Record<string, unknown>) => this.toEntity(c));
+    const total = count;
 
     return {
       data: contracts,

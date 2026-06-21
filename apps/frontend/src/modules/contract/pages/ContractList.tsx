@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@/shared/components/Button';
 import { Input } from '@/shared/components/Input';
 import { contractService } from '../services/contract.service';
 import { Contract, ContractQuery, ContractStatus, PaginatedResult } from '../types/contract.types';
-import { toast } from 'sonner';
+import { handleApiError } from '@/shared/lib/error-handler';
+import { useDebounce } from '@/shared/hooks/useDebounce';
 import {
   Table,
   TableBody,
@@ -31,32 +32,51 @@ import { DateRange } from 'react-day-picker';
 
 export function ContractList() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  
+  const initialQuery: ContractQuery = {
+    page: Number(searchParams.get('page')) || 1,
+    limit: Number(searchParams.get('limit')) || 10,
+    search: searchParams.get('search') || '',
+    status: (searchParams.get('status') as ContractStatus | '') || '',
+    startDate: searchParams.get('startDate') || '',
+    endDate: searchParams.get('endDate') || '',
+  };
+
+  const [query, setQuery] = useState<ContractQuery>(initialQuery);
   const [data, setData] = useState<PaginatedResult<Contract> | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [query, setQuery] = useState<ContractQuery>({
-    page: 1,
-    limit: 10,
-    search: '',
-    status: '',
-    startDate: '',
-    endDate: '',
-  });
 
-  const fetchContracts = async () => {
+  const debouncedSearch = useDebounce(query.search, 500);
+
+  const fetchContracts = async (currentQuery: ContractQuery) => {
     setIsLoading(true);
     try {
-      const response = await contractService.findAll(query);
+      const response = await contractService.findAll(currentQuery);
       setData(response);
     } catch (error) {
-      toast.error('Erro ao buscar contratos');
+      handleApiError(error, 'Erro ao buscar contratos');
     } finally {
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchContracts();
-  }, [query.page, query.status, query.search, query.startDate, query.endDate]);
+    // Sincroniza o estado local com a URL
+    const params = new URLSearchParams();
+    if (query.page && query.page > 1) params.set('page', query.page.toString());
+    if (query.limit && query.limit !== 10) params.set('limit', query.limit.toString());
+    if (debouncedSearch) params.set('search', debouncedSearch);
+    if (query.status) params.set('status', query.status);
+    if (query.startDate) params.set('startDate', query.startDate);
+    if (query.endDate) params.set('endDate', query.endDate);
+    
+    setSearchParams(params, { replace: true });
+
+    // Dispara a busca com o search com debounce
+    fetchContracts({ ...query, search: debouncedSearch });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query.page, query.limit, query.status, query.startDate, query.endDate, debouncedSearch]);
 
   const handleStatusChange = (value: string) => {
     setQuery((prev) => ({ ...prev, status: value, page: 1 }));
@@ -246,3 +266,4 @@ export function ContractList() {
     </div>
   );
 }
+
