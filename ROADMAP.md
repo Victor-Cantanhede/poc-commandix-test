@@ -162,6 +162,22 @@ Antes de concluir qualquer módulo verificar:
 
 ---
 
+# Refatoração — Requisito 2.1 (Auth & Multi-tenancy)
+
+Status: ✅ Concluído
+
+Escopo:
+- Garantir isolamento de dados por tenant (Admin gerencia apenas seu tenant)
+- Implementar CRUD de usuários dentro do módulo Tenant
+- Proteger o Admin original (primeiro admin) de alterações
+- Refatorar tela de Gestão de Tenants no Frontend para focar no Tenant atual
+- Adicionar Tenant ID no contexto de Autenticação do Frontend
+- Extrair Use-Cases do módulo Auth (Login, Refresh Token)
+- Tratamento de erro centralizado (error-handler.ts)
+
+---
+
 # Próxima Tarefa
 
 Implementar módulo Contract.
+

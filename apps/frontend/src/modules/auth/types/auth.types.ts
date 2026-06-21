@@ -1,7 +1,9 @@
 export interface User {
   id: string;
   name: string;
-  role: string;
+  role: 'ADMIN' | 'VIEWER';
+  tenantId: string;
+  tenantName: string;
 }
 
 export interface AuthResponse {

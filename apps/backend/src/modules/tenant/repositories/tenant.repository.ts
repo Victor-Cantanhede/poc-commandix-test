@@ -23,6 +23,7 @@ export class TenantRepository implements ITenantRepository {
             email: data.email,
             passwordHash,
             role: Role.ADMIN,
+            isOwner: true,
           },
         },
       },
@@ -38,18 +39,6 @@ export class TenantRepository implements ITenantRepository {
     });
   }
 
-  async findAll(): Promise<TenantEntity[]> {
-    return this.prisma.tenant.findMany({
-      where: { deletedAt: null },
-    });
-  }
-
-  async create(name: string): Promise<TenantEntity> {
-    return this.prisma.tenant.create({
-      data: { name },
-    });
-  }
-
   async update(id: string, name: string): Promise<TenantEntity> {
     return this.prisma.tenant.update({
       where: { id },
@@ -57,9 +46,71 @@ export class TenantRepository implements ITenantRepository {
     });
   }
 
-  async softDelete(id: string): Promise<void> {
-    await this.prisma.tenant.update({
-      where: { id },
+  // --- User Management ---
+
+  async findUsersByTenantId(tenantId: string) {
+    return this.prisma.user.findMany({
+      where: { tenantId, deletedAt: null },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        isOwner: true,
+        createdAt: true,
+      },
+      orderBy: { createdAt: 'asc' },
+    });
+  }
+
+  async findUserById(userId: string, tenantId: string) {
+    return this.prisma.user.findFirst({
+      where: { id: userId, tenantId, deletedAt: null },
+    });
+  }
+
+  async createUser(tenantId: string, data: any, passwordHash: string) {
+    return this.prisma.user.create({
+      data: {
+        tenantId,
+        name: data.name,
+        email: data.email,
+        passwordHash,
+        role: data.role,
+        isOwner: false,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        isOwner: true,
+        createdAt: true,
+      },
+    });
+  }
+
+  async updateUser(userId: string, data: any) {
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        name: data.name,
+        role: data.role,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        isOwner: true,
+        createdAt: true,
+      },
+    });
+  }
+
+  async softDeleteUser(userId: string) {
+    await this.prisma.user.update({
+      where: { id: userId },
       data: { deletedAt: new Date() },
     });
   }

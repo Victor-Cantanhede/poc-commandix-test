@@ -1,28 +1,33 @@
 import { api } from '../../../shared/services/api';
-import { Tenant, CreateTenantDto, UpdateTenantDto } from '../types/tenant.types';
+import { Tenant, TenantUser, UpdateTenantDto, CreateUserDto, UpdateUserDto } from '../types/tenant.types';
 
 export const tenantService = {
-  getAll: async (): Promise<Tenant[]> => {
-    const response = await api.get<Tenant[]>('/api/tenants');
+  getMyTenant: async (): Promise<Tenant> => {
+    const response = await api.get<Tenant>('/api/tenants/me');
     return response.data;
   },
 
-  getById: async (id: string): Promise<Tenant> => {
-    const response = await api.get<Tenant>(`/api/tenants/${id}`);
+  updateMyTenant: async (data: UpdateTenantDto): Promise<Tenant> => {
+    const response = await api.patch<Tenant>('/api/tenants/me', data);
     return response.data;
   },
 
-  create: async (data: CreateTenantDto): Promise<Tenant> => {
-    const response = await api.post<Tenant>('/api/tenants', data);
+  getUsers: async (): Promise<TenantUser[]> => {
+    const response = await api.get<TenantUser[]>('/api/tenants/me/users');
     return response.data;
   },
 
-  update: async (id: string, data: UpdateTenantDto): Promise<Tenant> => {
-    const response = await api.patch<Tenant>(`/api/tenants/${id}`, data);
+  createUser: async (data: CreateUserDto): Promise<TenantUser> => {
+    const response = await api.post<TenantUser>('/api/tenants/me/users', data);
     return response.data;
   },
 
-  delete: async (id: string): Promise<void> => {
-    await api.delete(`/api/tenants/${id}`);
+  updateUser: async (id: string, data: UpdateUserDto): Promise<TenantUser> => {
+    const response = await api.patch<TenantUser>(`/api/tenants/me/users/${id}`, data);
+    return response.data;
+  },
+
+  deleteUser: async (id: string): Promise<void> => {
+    await api.delete(`/api/tenants/me/users/${id}`);
   },
 };

@@ -8,12 +8,14 @@ export class AuthRepository {
   async findUserByEmail(email: string) {
     return this.prisma.user.findUnique({
       where: { email, deletedAt: null },
+      include: { tenant: true },
     });
   }
 
   async findUserByRefreshToken(token: string) {
     return this.prisma.user.findFirst({
       where: { refreshToken: token, deletedAt: null },
+      include: { tenant: true },
     });
   }
 

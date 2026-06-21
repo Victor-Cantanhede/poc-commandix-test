@@ -2,7 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import { App, ProtectedRoute, AdminRoute } from './App';
 import { Login } from '../modules/auth/pages/Login';
 import { Onboarding } from '../modules/auth/pages/Onboarding';
-import { Tenants } from '../modules/tenant/pages/Tenants';
+import { TenantManagement } from '../modules/tenant/pages/TenantManagement';
 import { TemplateConfig } from '../modules/template/pages/TemplateConfig';
 import { ContractList } from '../modules/contract/pages/ContractList';
 import { ContractDetail } from '../modules/contract/pages/ContractDetail';
@@ -47,7 +47,7 @@ export const router: ReturnType<typeof createBrowserRouter> = createBrowserRoute
             children: [
               {
                 path: 'tenants',
-                element: <Tenants />,
+                element: <TenantManagement />,
               },
               {
                 path: 'template',

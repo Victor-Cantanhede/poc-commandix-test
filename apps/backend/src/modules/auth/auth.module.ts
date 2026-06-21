@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
-import { AuthService } from './services/auth.service';
 import { AuthController } from './controllers/auth.controller';
 import { AuthRepository } from './repositories/auth.repository';
 import { TenantModule } from '../tenant/tenant.module';
+import { LoginUseCase } from './application/use-cases/login.use-case';
+import { RefreshTokenUseCase } from './application/use-cases/refresh-token.use-case';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from '../../core/auth/auth.guard';
 import { RolesGuard } from '../../core/auth/roles.guard';
@@ -13,13 +14,15 @@ import { RolesGuard } from '../../core/auth/roles.guard';
     TenantModule,
     JwtModule.register({
       global: true,
-      secret: process.env.JWT_SECRET,
+      secret: process.env.JWT_SECRET || 'fallback-secret',
       signOptions: { expiresIn: '15m' },
     }),
   ],
+  controllers: [AuthController],
   providers: [
-    AuthService,
     AuthRepository,
+    LoginUseCase,
+    RefreshTokenUseCase,
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
@@ -29,6 +32,7 @@ import { RolesGuard } from '../../core/auth/roles.guard';
       useClass: RolesGuard,
     },
   ],
-  controllers: [AuthController],
+  exports: [AuthRepository],
 })
 export class AuthModule {}
+

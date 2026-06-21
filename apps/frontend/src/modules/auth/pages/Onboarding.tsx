@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { authService } from '../services/auth.service';
+import { handleApiError } from '../../../shared/lib/error-handler';
 import { Button } from '@/shared/components/Button';
 import { Input } from '@/shared/components/Input';
 import { Command } from 'lucide-react';
@@ -23,9 +24,9 @@ export function Onboarding() {
       await authService.onboarding({ tenantName, userName, email, password });
       toast.success('Tenant criado com sucesso! Faça login.');
       navigate('/login');
-    } catch (err: unknown) {
-      const errorObj = err as { response?: { data?: { message?: string } } };
-      setError(errorObj.response?.data?.message || 'Erro ao criar Tenant');
+    } catch (err) {
+      const errorMessage = handleApiError(err, 'Erro ao criar conta');
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }

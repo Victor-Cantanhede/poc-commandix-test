@@ -25,7 +25,7 @@ export function MainLayout({ children }: MainLayoutProps) {
           </div>
           <div>
             <h1 className="text-xl font-bold tracking-tight">Commandix</h1>
-            <p className="text-xs text-muted-foreground font-medium">Tenant Manager</p>
+            <p className="text-xs text-muted-foreground font-medium">{user?.tenantName || 'Workspace'}</p>
           </div>
         </div>
 
@@ -89,7 +89,7 @@ export function MainLayout({ children }: MainLayoutProps) {
                       : 'text-muted-foreground group-hover:text-foreground transition-colors',
                   )}
                 />
-                Tenants
+                Meu Tenant
               </Link>
               <Link
                 to="/template"

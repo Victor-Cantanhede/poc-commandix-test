@@ -1,57 +1,35 @@
 import {
   Controller,
   Get,
-  Post,
   Patch,
-  Delete,
-  Param,
   Body,
-  HttpCode,
-  HttpStatus,
 } from '@nestjs/common';
 import { Roles } from '../../../core/auth/decorators';
 import { Role } from '@prisma/client';
-import { CreateTenantDto, UpdateTenantDto } from '../dtos/tenant.dto';
-import { TenantService } from '../services/tenant.service';
+import { UpdateTenantDto } from '../dtos/tenant.dto';
 import { FindTenantUseCase } from '../application/use-cases/find-tenant.use-case';
-import { ListTenantsUseCase } from '../application/use-cases/list-tenants.use-case';
 import { UpdateTenantUseCase } from '../application/use-cases/update-tenant.use-case';
-import { DeleteTenantUseCase } from '../application/use-cases/delete-tenant.use-case';
+import { CurrentUser } from '../../../core/auth/current-user.decorator';
+import { JwtPayload } from '../../../core/auth/interfaces/jwt-payload.interface';
 
 @Controller('tenants')
-@Roles(Role.ADMIN) // Apenas administradores podem gerenciar tenants
+@Roles(Role.ADMIN) // Apenas administradores podem gerenciar seu próprio tenant
 export class TenantController {
   constructor(
-    private tenantService: TenantService,
     private findTenantUseCase: FindTenantUseCase,
-    private listTenantsUseCase: ListTenantsUseCase,
     private updateTenantUseCase: UpdateTenantUseCase,
-    private deleteTenantUseCase: DeleteTenantUseCase,
   ) {}
 
-  @Post()
-  async create(@Body() body: CreateTenantDto) {
-    return this.tenantService.create(body.name);
+  @Get('me')
+  async findMyTenant(@CurrentUser() user: JwtPayload) {
+    return this.findTenantUseCase.execute(user.tenantId);
   }
 
-  @Get()
-  async findAll() {
-    return this.listTenantsUseCase.execute();
-  }
-
-  @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return this.findTenantUseCase.execute(id);
-  }
-
-  @Patch(':id')
-  async update(@Param('id') id: string, @Body() body: UpdateTenantDto) {
-    return this.updateTenantUseCase.execute(id, body);
-  }
-
-  @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async remove(@Param('id') id: string) {
-    await this.deleteTenantUseCase.execute(id);
+  @Patch('me')
+  async updateMyTenant(
+    @CurrentUser() user: JwtPayload,
+    @Body() body: UpdateTenantDto,
+  ) {
+    return this.updateTenantUseCase.execute(user.tenantId, body);
   }
 }

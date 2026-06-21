@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { authService } from '../services/auth.service';
 import { useAuth } from '../hooks/useAuth';
+import { handleApiError } from '../../../shared/lib/error-handler';
 import { Button } from '@/shared/components/Button';
 import { Input } from '@/shared/components/Input';
 import { Command } from 'lucide-react';
@@ -24,11 +25,9 @@ export function Login() {
       login(response.accessToken, response.refreshToken, response.user);
       toast.success('Login realizado com sucesso!');
       navigate('/');
-    } catch (err: unknown) {
-      const errorObj = err as { response?: { data?: { message?: string } } };
-      const errorMessage = errorObj.response?.data?.message || 'Erro ao realizar login';
+    } catch (err) {
+      const errorMessage = handleApiError(err, 'Erro ao realizar login');
       setError(errorMessage);
-      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }

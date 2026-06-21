@@ -7,13 +7,13 @@ export function Dashboard() {
   const { user } = useAuth();
   const isAdmin = user?.role === 'ADMIN';
 
-  const [tenantsCount, setTenantsCount] = useState(0);
+  const [usersCount, setUsersCount] = useState(0);
 
   useEffect(() => {
     if (isAdmin) {
       tenantService
-        .getAll()
-        .then((tenants) => setTenantsCount(tenants.length))
+        .getUsers()
+        .then((users) => setUsersCount(users.length))
         .catch(console.error);
     }
   }, [isAdmin]);
@@ -28,10 +28,10 @@ export function Dashboard() {
         {isAdmin && (
           <div className="p-6 border border-border bg-card rounded-xl shadow-sm flex flex-col gap-2 hover:border-primary/50 transition-colors">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-muted-foreground">Total Tenants</span>
+              <span className="text-sm font-medium text-muted-foreground">Usuários no Tenant</span>
               <Users size={16} className="text-primary" />
             </div>
-            <div className="text-2xl font-bold">{tenantsCount}</div>
+            <div className="text-2xl font-bold">{usersCount}</div>
           </div>
         )}
         <div className="p-6 border border-border bg-card rounded-xl shadow-sm flex flex-col gap-2 hover:border-primary/50 transition-colors">
