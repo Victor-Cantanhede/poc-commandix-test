@@ -9,6 +9,7 @@ import {
   UseGuards,
   Delete,
 } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { CreateContractUseCase } from '../application/use-cases/create-contract.use-case';
 import { UpdateContractUseCase } from '../application/use-cases/update-contract.use-case';
 import { ChangeStatusUseCase } from '../application/use-cases/change-status.use-case';
@@ -25,6 +26,8 @@ import { JwtPayload } from '../../../core/auth/interfaces/jwt-payload.interface'
 import { AuthGuard } from '../../../core/auth/auth.guard';
 import { RolesGuard } from '../../../core/auth/roles.guard';
 
+@ApiTags('Contratos')
+@ApiBearerAuth()
 @Controller('contracts')
 @UseGuards(AuthGuard, RolesGuard)
 export class ContractController {
@@ -38,24 +41,38 @@ export class ContractController {
 
   @Roles(Role.ADMIN, Role.VIEWER)
   @Post()
+  @ApiOperation({ summary: 'Criar um novo contrato' })
+  @ApiResponse({ status: 201, description: 'Contrato criado com sucesso.' })
+  @ApiResponse({ status: 403, description: 'Acesso negado.' })
   create(@CurrentUser() user: JwtPayload, @Body() createContractDto: CreateContractDto) {
     return this.createContractUseCase.execute(user.tenantId, user.userId, createContractDto);
   }
 
   @Roles(Role.ADMIN, Role.VIEWER)
   @Get()
+  @ApiOperation({ summary: 'Listar contratos com filtros e paginação' })
+  @ApiResponse({ status: 200, description: 'Lista de contratos retornada com sucesso.' })
+  @ApiResponse({ status: 403, description: 'Acesso negado.' })
   findAll(@CurrentUser() user: JwtPayload, @Query() query: ContractQueryDto) {
     return this.listContractsUseCase.execute(user.tenantId, query);
   }
 
   @Roles(Role.ADMIN, Role.VIEWER)
   @Get(':id')
+  @ApiOperation({ summary: 'Obter detalhes de um contrato específico' })
+  @ApiParam({ name: 'id', description: 'ID do contrato' })
+  @ApiResponse({ status: 200, description: 'Contrato retornado com sucesso.' })
+  @ApiResponse({ status: 404, description: 'Contrato não encontrado.' })
   findById(@CurrentUser() user: JwtPayload, @Param('id') id: string) {
     return this.findContractUseCase.execute(user.tenantId, id);
   }
 
   @Roles(Role.ADMIN, Role.VIEWER)
   @Patch(':id')
+  @ApiOperation({ summary: 'Atualizar dados e status de um contrato' })
+  @ApiParam({ name: 'id', description: 'ID do contrato' })
+  @ApiResponse({ status: 200, description: 'Contrato atualizado com sucesso.' })
+  @ApiResponse({ status: 404, description: 'Contrato não encontrado.' })
   update(
     @CurrentUser() user: JwtPayload,
     @Param('id') id: string,
@@ -66,6 +83,11 @@ export class ContractController {
 
   @Roles(Role.ADMIN)
   @Patch(':id/status')
+  @ApiOperation({ summary: 'Alterar o status de um contrato (Apenas ADMIN)' })
+  @ApiParam({ name: 'id', description: 'ID do contrato' })
+  @ApiResponse({ status: 200, description: 'Status do contrato alterado com sucesso.' })
+  @ApiResponse({ status: 403, description: 'Acesso negado.' })
+  @ApiResponse({ status: 404, description: 'Contrato não encontrado.' })
   changeStatus(
     @CurrentUser() user: JwtPayload,
     @Param('id') id: string,
@@ -76,6 +98,8 @@ export class ContractController {
 
   @Roles(Role.ADMIN)
   @Delete(':id')
+  @ApiOperation({ summary: 'Excluir um contrato (Não implementado)' })
+  @ApiParam({ name: 'id', description: 'ID do contrato' })
   remove(@CurrentUser() user: JwtPayload, @Param('id') id: string) {
     throw new Error('Not implemented. Needs use case');
   }
